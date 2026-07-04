@@ -95,10 +95,28 @@ const VetacolLanding = () => {
               <span>🏆</span> 축산 선진국 프랑스 혁신 포뮬러
             </div>
           </div>
+
+          {/* 쿠팡 즉시 구매 CTA 버튼 (히어로 섹션) */}
+          <div className="pt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+            <a
+              href="https://www.coupang.com/vp/products/9428079667?vendorItemId=94985664531&itemId=28028533075&landingType=SDP"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-lg sm:text-xl rounded-2xl shadow-2xl hover:shadow-red-500/30 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 group border-2 border-amber-300/50 animate-bounce sm:animate-none"
+            >
+              <span className="text-2xl">🚀</span>
+              <span>쿠팡 공식 스토어 바로 구매하기</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </a>
+            <div className="text-xs sm:text-sm text-emerald-200 font-medium flex items-center gap-1.5 bg-black/30 px-4 py-3 rounded-xl border border-white/10">
+              <span className="text-amber-400">⚡</span> 로켓/택배 빠른 배송 & 100% 정품 보증
+            </div>
+          </div>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 -mt-12 relative z-20 space-y-16 pb-20">
+      {/* 헤더 침범(-mt-12) 제거 및 간격 조정(py-12) */}
+      <main className="max-w-5xl mx-auto px-4 py-12 relative z-20 space-y-16 pb-32">
         
         {/* 3. 4대 특장점 (Why Vetacol?) */}
         <section className="bg-white p-6 sm:p-10 rounded-3xl shadow-xl border border-gray-100">
@@ -255,44 +273,105 @@ const VetacolLanding = () => {
           </div>
         </section>
 
-        {/* 7. 1:1 상담 및 구매 문의 QR 코드 CTA */}
-        <section className="bg-gradient-to-r from-emerald-900 via-[#00513b] to-teal-900 rounded-3xl p-8 sm:p-12 text-white shadow-2xl flex flex-col md:flex-row items-center justify-between gap-8 border border-emerald-700/50">
-          <div className="space-y-4 text-center md:text-left max-w-xl">
-            <span className="inline-block px-3 py-1 bg-emerald-500/30 text-emerald-200 rounded-full text-xs font-semibold">
-              💬 (주)한국아그로 전문 상담
-            </span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold leading-tight">
-              농장 맞춤형 솔루션 및<br />
-              <span className="text-emerald-300">베타콜 구매 · 상담 신청</span>
-            </h2>
-            <p className="text-sm sm:text-base text-emerald-100/80 leading-relaxed break-keep">
-              스마트폰 카메라로 QR 코드를 스캔하거나 상담 신청 버튼을 클릭하세요.<br />
-              <strong className="text-white">제임스 홍 고문수의사팀 및 전문 임상 컨설턴트</strong>가 신속하게 안내해 드립니다.
-            </p>
-            <div className="pt-2 flex flex-wrap justify-center md:justify-start gap-4 text-xs text-emerald-200">
-              <span className="flex items-center gap-1">📞 고객상담: 02-6949-5708</span>
-              <span className="flex items-center gap-1">🌐 www.agrokorea.kr</span>
+        {/* 7. 쿠팡 공식 구매 & 1:1 상담 안내 (투트랙 CTA) */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* 좌측: 쿠팡 온라인 즉시 구매 */}
+          <div className="bg-gradient-to-br from-red-600 via-rose-600 to-amber-600 rounded-3xl p-8 text-white shadow-2xl flex flex-col justify-between border border-amber-300/30 relative overflow-hidden group">
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
+            <div className="space-y-4 relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-extrabold tracking-wide">
+                <span>⚡ 쿠팡 로켓/택배 빠른 배송</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black leading-tight">
+                쿠팡 공식 스토어에서<br />
+                <span className="text-amber-200">즉시 구매하고 빠르게 받아보세요!</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-rose-100 leading-relaxed break-keep">
+                복잡한 상담 없이 온라인에서 간편하게 주문하세요.<br />
+                <strong>(주)한국아그로 공식 입점 제품</strong>으로 100% 정품 품질을 보증합니다.
+              </p>
+              <div className="bg-black/20 p-3 rounded-xl text-xs space-y-1 border border-white/10">
+                <div className="font-bold text-amber-300">📦 상품명: 베타콜 Vetacol 송아지 초유 면역 영양제</div>
+                <div className="text-rose-100">15ml 눈금 시린지 액상 타입 (초유·유청·바실러스·비타민)</div>
+              </div>
+            </div>
+            <div className="mt-8 relative z-10">
+              <a
+                href="https://www.coupang.com/vp/products/9428079667?vendorItemId=94985664531&itemId=28028533075&landingType=SDP"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-4 bg-white hover:bg-amber-50 text-red-700 hover:text-red-800 rounded-2xl text-base sm:text-lg font-black shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 transform group-hover:translate-y-[-2px]"
+              >
+                <span>🛒 쿠팡에서 바로 주문하기</span>
+                <span>→</span>
+              </a>
             </div>
           </div>
 
-          {/* QR 코드 스캔 영역 */}
-          <div className="flex flex-col items-center bg-white p-6 rounded-2xl shadow-2xl text-gray-800 shrink-0 w-64 text-center transform hover:scale-105 transition-transform duration-300">
-            <div className="w-44 h-44 bg-slate-100 rounded-xl border-2 border-dashed border-emerald-500/60 flex flex-col items-center justify-center p-3 mb-3 relative group cursor-pointer">
-              {/* QR 코드 이미지 대체 그래픽 */}
-              <svg className="w-24 h-24 text-[#00513b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-              </svg>
-              <span className="text-xs font-extrabold text-[#00513b] mt-1">스캔하여 상담 연결</span>
+          {/* 우측: 1:1 수의사 상담 및 대량 구매 문의 */}
+          <div className="bg-gradient-to-br from-emerald-900 via-[#00513b] to-teal-900 rounded-3xl p-8 text-white shadow-2xl flex flex-col justify-between border border-emerald-700/50 relative overflow-hidden">
+            <div className="space-y-4 relative z-10">
+              <span className="inline-block px-3 py-1 bg-emerald-500/30 text-emerald-200 rounded-full text-xs font-semibold">
+                💬 (주)한국아그로 전문 상담
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight">
+                농장 맞춤형 솔루션 및<br />
+                <span className="text-emerald-300">대량 구매 · 기술 상담</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-emerald-100/80 leading-relaxed break-keep">
+                스마트폰 카메라로 QR 코드를 스캔하여 문의해 주세요.<br />
+                <strong className="text-white">제임스 홍 고문수의사팀 및 전문 임상 컨설턴트</strong>가 친절하게 안내해 드립니다.
+              </p>
+              <div className="pt-1 flex flex-col gap-1.5 text-xs text-emerald-200">
+                <span className="flex items-center gap-1.5">📞 고객상담: <strong className="text-white text-sm">02-6949-5708</strong></span>
+                <span className="flex items-center gap-1.5">📱 모바일 상담: <strong className="text-white text-sm">010-5407-5708</strong></span>
+                <span className="flex items-center gap-1.5">🌐 공식 웹사이트: www.agrokorea.kr</span>
+              </div>
             </div>
-            <p className="text-xs font-bold text-gray-700 mb-3">카메라를 켜고 스캔하세요!</p>
-            <button className="w-full py-2.5 bg-[#00513b] hover:bg-[#003828] text-white rounded-xl text-xs font-bold shadow transition-colors flex items-center justify-center gap-1">
-              <span>온라인 상담 바로가기</span>
-              <span>→</span>
-            </button>
+
+            {/* 하단 상담 연결 버튼 / 간편 안내 */}
+            <div className="mt-8 pt-4 border-t border-emerald-800/80 flex items-center justify-between gap-4">
+              <div className="text-xs text-emerald-300">
+                * 평일 09:00 ~ 18:00 (주말/공휴일 휴무)<br />
+                * 전국 농장 맞춤 컨설팅 지원
+              </div>
+              <a
+                href="http://www.agrokorea.kr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3 bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow transition-colors flex items-center gap-1 shrink-0"
+              >
+                <span>웹사이트 방문</span>
+                <span>→</span>
+              </a>
+            </div>
           </div>
         </section>
 
       </main>
+
+      {/* 8. 플로팅 쿠팡 구매 바 (항상 하단 고정) */}
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-2xl bg-slate-900/95 backdrop-blur-md border border-amber-500/50 p-3 sm:p-4 rounded-2xl shadow-2xl flex items-center justify-between gap-3 animate-fade-in">
+        <div className="flex items-center gap-2.5 overflow-hidden">
+          <span className="text-2xl sm:text-3xl shrink-0 animate-bounce">🚀</span>
+          <div className="truncate">
+            <div className="text-[11px] sm:text-xs text-amber-400 font-bold flex items-center gap-1">
+              <span>쿠팡 공식 입점</span>
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
+            </div>
+            <div className="text-xs sm:text-sm font-extrabold text-white truncate">베타콜 Vetacol 송아지 초유 면역 영양제 15ml</div>
+          </div>
+        </div>
+        <a
+          href="https://www.coupang.com/vp/products/9428079667?vendorItemId=94985664531&itemId=28028533075&landingType=SDP"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="shrink-0 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-1.5"
+        >
+          <span>🛒 쿠팡 구매하기</span>
+          <span>→</span>
+        </a>
+      </div>
 
       {/* 8. 상세 푸터 (법적 공지 및 수입원 정보) */}
       <footer className="bg-slate-900 text-slate-400 py-12 px-6 border-t border-slate-800 text-xs">
