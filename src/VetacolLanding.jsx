@@ -144,6 +144,65 @@ const VetacolLanding = () => {
           </div>
         </section>
 
+        {/* 3.5. 공식 해설 동영상 (비디오 플레이어) */}
+        <section className="bg-gradient-to-br from-slate-900 via-[#003828] to-slate-900 text-white p-6 sm:p-10 rounded-3xl shadow-2xl border border-emerald-500/30 relative overflow-hidden">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="text-center max-w-2xl mx-auto mb-8 relative z-10">
+            <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-semibold uppercase tracking-wider">
+              🎬 Official Video Presentation
+            </span>
+            <h2 className="text-2xl sm:text-4xl font-black mt-3 mb-2">
+              <span className="text-emerald-400">5분으로 끝내는</span> 송아지 골든타임
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-300 leading-relaxed break-keep">
+              (주)한국아그로 × 고문수의사 제임스 홍 팀이 직접 안내하는 베타콜 핵심 효과와 급여 가이드를 영상으로 확인하세요.
+            </p>
+          </div>
+
+          {/* 16:9 비디오 플레이어 컨테이너 */}
+          <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl border-2 border-emerald-500/40 bg-black aspect-video relative z-10 group">
+            <video
+              className="w-full h-full object-cover"
+              controls
+              preload="metadata"
+              playsInline
+            >
+              <source src="./vetacol_video3.mp4" type="video/mp4" />
+              해당 브라우저에서는 동영상 재생을 지원하지 않습니다. 크롬 또는 엣지 브라우저를 이용해 주세요.
+            </video>
+          </div>
+
+          {/* 영상 핵심 하이라이트 요약 */}
+          <div className="max-w-4xl mx-auto mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 relative z-10 text-center">
+            <div className="bg-slate-800/80 p-3.5 rounded-xl border border-white/10 flex flex-col items-center">
+              <span className="text-xs font-bold text-amber-400 mb-0.5">💡 STEP 1. 초기 면역 공백</span>
+              <p className="text-[11px] text-gray-300">출생 직후 6~12시간 내 초유 면역글로불린 흡수의 중요성</p>
+            </div>
+            <div className="bg-slate-800/80 p-3.5 rounded-xl border border-white/10 flex flex-col items-center">
+              <span className="text-xs font-bold text-emerald-400 mb-0.5">🛡️ STEP 2. 5대 복합 포뮬러</span>
+              <p className="text-[11px] text-gray-300">초유·유청·바실러스·MCT·비타민의 과학적 상승 작용</p>
+            </div>
+            <div className="bg-slate-800/80 p-3.5 rounded-xl border border-white/10 flex flex-col items-center">
+              <span className="text-xs font-bold text-teal-300 mb-0.5">💉 STEP 3. 15ml 시린지 급여</span>
+              <p className="text-[11px] text-gray-300">입안 깊숙이 1회 주입으로 완결되는 가장 위생적인 투여법</p>
+            </div>
+          </div>
+
+          {/* 영상 시청 후 구매 유도 CTA */}
+          <div className="mt-8 text-center relative z-10">
+            <a
+              href="https://www.coupang.com/vp/products/9428079667?vendorItemId=94985664531&itemId=28028533075&landingType=SDP"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-sm sm:text-base rounded-xl shadow-lg hover:shadow-xl transition-all"
+            >
+              <span>🛒 영상 속 베타콜, 쿠팡에서 지금 바로 주문하기</span>
+              <span>→</span>
+            </a>
+          </div>
+        </section>
+
         {/* 4. 추천 송아지 타겟 섹션 */}
         <section className="space-y-6">
           <div className="text-center max-w-2xl mx-auto">
