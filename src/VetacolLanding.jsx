@@ -508,9 +508,9 @@ const VetacolLanding = () => {
       </footer>
 
       {/* AI Chatbot Floating Action Button & Window */}
-      <div className="fixed bottom-24 right-4 sm:bottom-6 sm:right-6 z-[60] flex flex-col items-end">
+      <div className="fixed bottom-28 right-6 sm:bottom-8 sm:right-8 z-[60] flex flex-col items-end">
         {isChatOpen ? (
-          <div className="bg-white w-[300px] sm:w-[400px] h-[450px] sm:h-[550px] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4">
+          <div className="bg-white w-[320px] sm:w-[400px] h-[480px] sm:h-[550px] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4">
             <div className="bg-[#00513b] p-3 sm:p-4 flex justify-between items-center text-white">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -563,9 +563,9 @@ const VetacolLanding = () => {
         ) : (
           <button 
             onClick={() => setIsChatOpen(true)}
-            className="w-14 h-14 sm:w-16 sm:h-16 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-110 hover:-translate-y-2 animate-bounce"
+            className="w-16 h-16 sm:w-20 sm:h-20 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-110 hover:-translate-y-2 animate-bounce ring-4 ring-white/30"
           >
-            <MessageCircle className="w-7 h-7 sm:w-8 sm:h-8" />
+            <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10" />
           </button>
         )}
       </div>
