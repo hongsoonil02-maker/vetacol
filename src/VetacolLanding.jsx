@@ -102,7 +102,7 @@ const VetacolLanding = () => {
               href="https://www.coupang.com/vp/products/9428079667?vendorItemId=94985664531&itemId=28028533075&landingType=SDP"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-lg sm:text-xl rounded-2xl shadow-2xl hover:shadow-red-500/30 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 group border-2 border-amber-300/50 animate-bounce sm:animate-none"
+              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-black text-lg sm:text-xl rounded-2xl shadow-xl hover:shadow-amber-500/30 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 group border-2 border-yellow-200 animate-bounce sm:animate-none"
             >
               <span className="text-2xl">🚀</span>
               <span>쿠팡 공식 스토어 바로 구매하기</span>
@@ -195,7 +195,7 @@ const VetacolLanding = () => {
               href="https://www.coupang.com/vp/products/9428079667?vendorItemId=94985664531&itemId=28028533075&landingType=SDP"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-sm sm:text-base rounded-xl shadow-lg hover:shadow-xl transition-all"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-black text-sm sm:text-base rounded-xl shadow-lg hover:shadow-xl transition-all border border-yellow-200"
             >
               <span>🛒 영상 속 베타콜, 쿠팡에서 지금 바로 주문하기</span>
               <span>→</span>
@@ -335,23 +335,23 @@ const VetacolLanding = () => {
         {/* 7. 쿠팡 공식 구매 & 1:1 상담 안내 (투트랙 CTA) */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* 좌측: 쿠팡 온라인 즉시 구매 */}
-          <div className="bg-gradient-to-br from-red-600 via-rose-600 to-amber-600 rounded-3xl p-8 text-white shadow-2xl flex flex-col justify-between border border-amber-300/30 relative overflow-hidden group">
+          <div className="bg-gradient-to-br from-amber-700 via-amber-600 to-yellow-600 rounded-3xl p-8 text-white shadow-2xl flex flex-col justify-between border border-yellow-300/40 relative overflow-hidden group">
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
             <div className="space-y-4 relative z-10">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-extrabold tracking-wide">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-black/20 backdrop-blur-md rounded-full text-xs font-extrabold tracking-wide text-yellow-200 border border-yellow-300/30">
                 <span>⚡ 쿠팡 로켓/택배 빠른 배송</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-black leading-tight">
                 쿠팡 공식 스토어에서<br />
-                <span className="text-amber-200">즉시 구매하고 빠르게 받아보세요!</span>
+                <span className="text-yellow-200">즉시 구매하고 빠르게 받아보세요!</span>
               </h2>
-              <p className="text-xs sm:text-sm text-rose-100 leading-relaxed break-keep">
+              <p className="text-xs sm:text-sm text-amber-100 leading-relaxed break-keep">
                 복잡한 상담 없이 온라인에서 간편하게 주문하세요.<br />
                 <strong>(주)한국아그로 공식 입점 제품</strong>으로 100% 정품 품질을 보증합니다.
               </p>
-              <div className="bg-black/20 p-3 rounded-xl text-xs space-y-1 border border-white/10">
-                <div className="font-bold text-amber-300">📦 상품명: 베타콜 Vetacol 송아지 초유 면역 영양제</div>
-                <div className="text-rose-100">15ml 눈금 시린지 액상 타입 (초유·유청·바실러스·비타민)</div>
+              <div className="bg-black/30 p-3 rounded-xl text-xs space-y-1 border border-white/10">
+                <div className="font-bold text-yellow-300">📦 상품명: 베타콜 Vetacol 송아지 초유 면역 영양제</div>
+                <div className="text-amber-100">15ml 눈금 시린지 액상 타입 (초유·유청·바실러스·비타민)</div>
               </div>
             </div>
             <div className="mt-8 relative z-10">
@@ -359,7 +359,7 @@ const VetacolLanding = () => {
                 href="https://www.coupang.com/vp/products/9428079667?vendorItemId=94985664531&itemId=28028533075&landingType=SDP"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-4 bg-white hover:bg-amber-50 text-red-700 hover:text-red-800 rounded-2xl text-base sm:text-lg font-black shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 transform group-hover:translate-y-[-2px]"
+                className="w-full py-4 bg-white hover:bg-emerald-50 text-[#00513b] hover:text-emerald-900 rounded-2xl text-base sm:text-lg font-black shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 transform group-hover:translate-y-[-2px] border-2 border-emerald-600/10"
               >
                 <span>🛒 쿠팡에서 바로 주문하기</span>
                 <span>→</span>
@@ -416,7 +416,7 @@ const VetacolLanding = () => {
           <div className="truncate">
             <div className="text-[11px] sm:text-xs text-amber-400 font-bold flex items-center gap-1">
               <span>쿠팡 공식 입점</span>
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" />
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
             </div>
             <div className="text-xs sm:text-sm font-extrabold text-white truncate">베타콜 Vetacol 송아지 초유 면역 영양제 15ml</div>
           </div>
@@ -425,7 +425,7 @@ const VetacolLanding = () => {
           href="https://www.coupang.com/vp/products/9428079667?vendorItemId=94985664531&itemId=28028533075&landingType=SDP"
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-1.5"
+          className="shrink-0 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-black text-xs sm:text-sm rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-1.5 border border-yellow-200"
         >
           <span>🛒 쿠팡 구매하기</span>
           <span>→</span>
