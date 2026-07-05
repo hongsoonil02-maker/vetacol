@@ -378,9 +378,26 @@ const VetacolLanding = () => {
                 <span className="text-emerald-300">대량 구매 · 기술 상담</span>
               </h2>
               <p className="text-xs sm:text-sm text-emerald-100/80 leading-relaxed break-keep">
-                스마트폰 카메라로 QR 코드를 스캔하여 문의해 주세요.<br />
+                스마트폰 카메라로 QR 코드를 스캔하여 간편하게 접속하거나 거래처에 공유해 보세요.<br />
                 <strong className="text-white">제임스 홍 고문수의사팀 및 전문 임상 컨설턴트</strong>가 친절하게 안내해 드립니다.
               </p>
+
+              {/* 공식 QR 코드 스캔 박스 */}
+              <div className="my-3 p-3 sm:p-4 bg-white/95 backdrop-blur-md rounded-2xl flex items-center gap-3.5 border border-emerald-400/40 text-slate-900 shadow-lg">
+                <img src="./vetacol_qr.png" alt="베타콜 공식 QR코드" className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl shrink-0 border border-slate-200 shadow" />
+                <div className="space-y-1">
+                  <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-100 text-[#00513b] text-[11px] font-extrabold">
+                    <span>📱 스마트폰 카메라 간편 스캔</span>
+                  </div>
+                  <div className="text-xs sm:text-sm font-extrabold text-slate-900 leading-tight">
+                    베타콜 공식 랜딩페이지 접속 QR
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed break-keep">
+                    포스터, 리플렛, 명함 인용 가능! 스마트폰 카메라로 스캔 시 즉시 모바일 페이지로 연결됩니다.
+                  </p>
+                </div>
+              </div>
+
               <div className="pt-1 flex flex-col gap-1.5 text-xs text-emerald-200">
                 <span className="flex items-center gap-1.5">📞 고객상담: <strong className="text-white text-sm">02-6949-5708</strong></span>
                 <span className="flex items-center gap-1.5">📱 모바일 상담: <strong className="text-white text-sm">010-5407-5708</strong></span>
