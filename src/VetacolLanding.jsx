@@ -449,7 +449,7 @@ const VetacolLanding = () => {
         </a>
       </div>
 
-      {/* 8. 상세 푸터 (법적 공지 및 수입원 정보) */}
+      {/* 8. 상세 푸터 (법적 공지 및 판매원 정보) */}
       <footer className="bg-slate-900 text-slate-400 py-12 px-6 border-t border-slate-800 text-xs">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <div className="space-y-2">
@@ -462,7 +462,7 @@ const VetacolLanding = () => {
           </div>
           <div className="space-y-1 text-slate-400">
             <p><strong className="text-slate-300">제조원:</strong> VETALIS Laboratoire (프랑스, 제조소 승인번호 α FR 16089043)</p>
-            <p><strong className="text-slate-300">수입원:</strong> (주)엘켐코바이오 (서울 중랑구 신내역로 3길 신내데시앙플렉스 B동 104호)</p>
+            <p><strong className="text-slate-300">판매원:</strong> (주)한국아그로 (서울특별시 마포구 군나루로 75 성지빌딩 1506호 | TEL: 02-6949-5708)</p>
             <p><strong className="text-slate-300">사료의 성분등록번호:</strong> 제 서울-16019호 | <strong className="text-slate-300">명칭:</strong> 양축용 영양보충제(특수배합사료)</p>
             <p><strong className="text-slate-300">등록성분량:</strong> 조단백질 13.4% 이상, 조지방 2.3% 이상, 수분 46.0% 이하</p>
           </div>
