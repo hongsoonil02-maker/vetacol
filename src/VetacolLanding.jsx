@@ -455,14 +455,14 @@ const VetacolLanding = () => {
           <div className="space-y-2">
             <h4 className="text-white font-bold text-sm">(주)한국아그로 | 고문수의사 제임스 홍</h4>
             <p className="leading-relaxed">
-              서울특별시 마포구 군나루로 75 성지빌딩 1506호<br />
+              서울시 마포구 큰우물로 75 성지빌딩 1506호<br />
               TEL: 02-6949-5708 | Mobile: 010-5407-5708<br />
               웹사이트: <a href="http://www.agrokorea.kr" className="text-emerald-400 hover:underline">www.agrokorea.kr</a>
             </p>
           </div>
           <div className="space-y-1 text-slate-400">
             <p><strong className="text-slate-300">제조원:</strong> VETALIS Laboratoire (프랑스, 제조소 승인번호 α FR 16089043)</p>
-            <p><strong className="text-slate-300">판매원:</strong> (주)한국아그로 (서울특별시 마포구 군나루로 75 성지빌딩 1506호 | TEL: 02-6949-5708)</p>
+            <p className="whitespace-nowrap"><strong className="text-slate-300">판매원 :</strong> (주)한국아그로 | 서울시 마포구 큰우물로 75 성지빌딩 1506호 | TEL : 02-6949-5708</p>
             <p><strong className="text-slate-300">사료의 성분등록번호:</strong> 제 서울-16019호 | <strong className="text-slate-300">명칭:</strong> 양축용 영양보충제(특수배합사료)</p>
             <p><strong className="text-slate-300">등록성분량:</strong> 조단백질 13.4% 이상, 조지방 2.3% 이상, 수분 46.0% 이하</p>
           </div>
