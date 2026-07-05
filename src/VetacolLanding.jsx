@@ -1,7 +1,41 @@
 import React, { useState } from 'react';
+import { MessageCircle, X, Send } from 'lucide-react';
 
 const VetacolLanding = () => {
   const [activeTab, setActiveTab] = useState('all');
+  
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    { role: 'ai', content: '안녕하세요! 베타콜 전문 수의사 AI 상담사입니다. 송아지 설사병 예방이나 베타콜 급여에 대해 궁금한 점이 있으신가요?' }
+  ]);
+  const [chatInput, setChatInput] = useState('');
+
+  const handleChatSubmit = (e) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+    
+    setChatMessages([...chatMessages, { role: 'user', content: chatInput }]);
+    
+    // Mock AI response
+    setTimeout(() => {
+      let aiResponse = "접수되었습니다. 더 자세한 상담이 필요하시면 하단의 상담 문의 폼을 이용해주시거나 고문 수의사에게 직접 연락 부탁드립니다.";
+      if (chatInput.includes('급여') || chatInput.includes('언제')) {
+        aiResponse = "베타콜은 출생 직후 15ml 시린지를 입안에 직접 짜서 1회 급여하는 것이 가장 좋습니다. 부족한 에너지를 빠르게 공급합니다.";
+      } else if (chatInput.includes('효과') || chatInput.includes('장점')) {
+        aiResponse = "베타콜은 초유, 유청단백질, 바실러스 2종을 포함하여 초기 활력과 면역, 그리고 장 건강까지 돕는 프랑스산 프리미엄 영양제입니다.";
+      } else if (chatInput.includes('보관')) {
+        aiResponse = "직사광선을 피하고 실온에 보관하시면 됩니다. 개봉 후에는 즉시 전량 급여하시기를 권장합니다.";
+      }
+      
+      setChatMessages(prev => [...prev, { role: 'ai', content: aiResponse }]);
+    }, 1000);
+    
+    setChatInput('');
+  };
+
+  const handleQuickReply = (question) => {
+    setChatInput(question);
+  };
 
   // 5대 핵심 성분 데이터
   const ingredients = [
@@ -472,6 +506,69 @@ const VetacolLanding = () => {
           <p>Copyright © Korea Agro Co., Ltd. All rights reserved.</p>
         </div>
       </footer>
+
+      {/* AI Chatbot Floating Action Button & Window */}
+      <div className="fixed bottom-24 right-4 sm:bottom-6 sm:right-6 z-[60] flex flex-col items-end">
+        {isChatOpen ? (
+          <div className="bg-white w-[300px] sm:w-[400px] h-[450px] sm:h-[550px] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4">
+            <div className="bg-[#00513b] p-3 sm:p-4 flex justify-between items-center text-white">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center">
+                  <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm sm:text-base">베타콜 수의사 AI</h3>
+                  <p className="text-[10px] sm:text-xs text-emerald-200">24시간 전문 수의 상담 대기중</p>
+                </div>
+              </div>
+              <button onClick={() => setIsChatOpen(false)} className="text-emerald-100 hover:text-white transition-colors">
+                <X className="w-5 h-5 sm:w-6 sm:h-6" />
+              </button>
+            </div>
+            
+            <div className="flex-1 p-3 sm:p-4 overflow-y-auto bg-gray-50 flex flex-col gap-3 sm:gap-4">
+              {chatMessages.map((msg, i) => (
+                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[85%] p-2.5 sm:p-3 rounded-2xl text-xs sm:text-sm leading-relaxed break-keep ${
+                    msg.role === 'user' 
+                      ? 'bg-[#00513b] text-white rounded-tr-sm' 
+                      : 'bg-white border border-gray-200 text-gray-800 rounded-tl-sm shadow-sm'
+                  }`}>
+                    {msg.content}
+                  </div>
+                </div>
+              ))}
+              
+              {/* Quick Replies */}
+              <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2 sm:mt-4">
+                <button onClick={() => handleQuickReply('베타콜의 장점이 뭔가요?')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">장점이 뭔가요?</button>
+                <button onClick={() => handleQuickReply('언제 어떻게 급여하나요?')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">언제 급여하나요?</button>
+                <button onClick={() => handleQuickReply('제품 보관 방법은요?')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">보관방법?</button>
+              </div>
+            </div>
+            
+            <form onSubmit={handleChatSubmit} className="p-3 sm:p-4 bg-white border-t border-gray-100 flex gap-2">
+              <input 
+                type="text" 
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                placeholder="궁금한 점을 질문해보세요..." 
+                className="flex-1 bg-gray-100 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#00513b]"
+              />
+              <button type="submit" className="w-8 h-8 sm:w-10 sm:h-10 bg-[#00513b] text-white rounded-full flex items-center justify-center hover:bg-[#003828] transition-colors shrink-0 shadow-md">
+                <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-0.5 sm:ml-1" />
+              </button>
+            </form>
+          </div>
+        ) : (
+          <button 
+            onClick={() => setIsChatOpen(true)}
+            className="w-14 h-14 sm:w-16 sm:h-16 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-110 hover:-translate-y-2 animate-bounce"
+          >
+            <MessageCircle className="w-7 h-7 sm:w-8 sm:h-8" />
+          </button>
+        )}
+      </div>
 
     </div>
   );
