@@ -55,42 +55,42 @@ const VetacolLanding = () => {
   return (
     <div className="min-h-screen font-sans text-gray-800 bg-slate-50 selection:bg-[#00513b] selection:text-white relative break-keep">
       
-      {/* 1. 최상단 신뢰도 배너 */}
-      <div className="bg-[#002b1f] text-emerald-300 text-xs sm:text-sm py-2.5 px-4 text-center font-medium tracking-wide border-b border-emerald-800/40">
-        <span className="inline-flex items-center justify-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          {t.banner}
-        </span>
+      {/* 1. 최상단 신뢰도 배너 (모바일 줄바꿈 및 아이콘 찌그러짐 방지 최적화) */}
+      <div className="bg-[#002b1f] text-emerald-300 text-xs sm:text-sm py-2 sm:py-2.5 px-3 sm:px-4 text-center font-medium tracking-wide border-b border-emerald-800/40">
+        <div className="flex items-center justify-center gap-1.5 max-w-5xl mx-auto">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+          <span className="leading-snug break-keep">{t.banner}</span>
+        </div>
       </div>
 
-      {/* 2. 로타갈(Rotagal) 스타일 상단 내비게이션 헤더 바 (제품명 + 외국어 토글) */}
-      <nav className="sticky top-0 z-50 bg-[#00513b]/95 backdrop-blur-md border-b border-white/15 px-4 sm:px-8 py-3 shadow-lg transition-all">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
-          {/* 좌측: 로고 및 제품명 (Rotagal 스타일 브랜딩) */}
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md border border-yellow-200">
-              <span className="text-lg sm:text-2xl">🐮</span>
+      {/* 2. 로타갈(Rotagal) 스타일 상단 내비게이션 헤더 바 (모바일 최적화: 토글 20% 축소 및 레이아웃 깨짐 방지) */}
+      <nav className="sticky top-0 z-50 bg-[#00513b]/95 backdrop-blur-md border-b border-white/15 px-2.5 sm:px-8 py-2 sm:py-3 shadow-lg transition-all">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-1.5 sm:gap-3">
+          {/* 좌측: 로고 및 제품명 (Rotagal 스타일 브랜딩 - 모바일에서 유연한 너비 적용) */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
+            <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md border border-yellow-200 shrink-0">
+              <span className="text-base sm:text-2xl">🐮</span>
             </div>
-            <div className="flex flex-col text-left">
-              <div className="flex items-center gap-1.5">
-                <span className="text-lg sm:text-2xl font-black tracking-tight text-white drop-shadow">
+            <div className="flex flex-col text-left min-w-0">
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                <span className="text-base sm:text-2xl font-black tracking-tight text-white drop-shadow leading-none">
                   VETACOL
                 </span>
-                <span className="px-1.5 py-0.5 text-[9px] sm:text-xs font-extrabold bg-amber-400/20 text-amber-300 border border-amber-400/30 rounded">
+                <span className="px-1 sm:px-1.5 py-0.5 text-[9px] sm:text-xs font-extrabold bg-amber-400/20 text-amber-300 border border-amber-400/30 rounded leading-none shrink-0">
                   {lang === 'ko' ? '베타콜' : 'Colostrum'}
                 </span>
               </div>
-              <span className="text-[9px] sm:text-xs font-semibold text-emerald-200/80 tracking-wide">
+              <span className="text-[8px] sm:text-xs font-semibold text-emerald-200/80 tracking-tighter sm:tracking-wide truncate">
                 VETALIS France × Agrokorea
               </span>
             </div>
           </div>
 
-          {/* 우측: 외국어 토글 스위치 (헤더 내부에 세련되게 통합) */}
-          <div className="inline-flex items-center bg-black/35 backdrop-blur-md border border-white/20 p-1 rounded-full shadow-inner">
+          {/* 우측: 외국어 토글 스위치 (모바일에서 버튼 크기 20% 이상 축소 및 간격 최적화로 잘림 100% 해결) */}
+          <div className="inline-flex items-center bg-black/35 backdrop-blur-md border border-white/20 p-0.5 sm:p-1 rounded-full shadow-inner shrink-0">
             <button
               onClick={() => setLang('ko')}
-              className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+              className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-sm font-extrabold tracking-tight sm:tracking-normal transition-all duration-300 ${
                 lang === 'ko'
                   ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
                   : 'text-emerald-100/70 hover:text-white'
@@ -100,7 +100,7 @@ const VetacolLanding = () => {
             </button>
             <button
               onClick={() => setLang('en')}
-              className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+              className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-sm font-extrabold tracking-tight sm:tracking-normal transition-all duration-300 ${
                 lang === 'en'
                   ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
                   : 'text-emerald-100/70 hover:text-white'
@@ -110,7 +110,7 @@ const VetacolLanding = () => {
             </button>
             <button
               onClick={() => setLang('fr')}
-              className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+              className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-sm font-extrabold tracking-tight sm:tracking-normal transition-all duration-300 ${
                 lang === 'fr'
                   ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
                   : 'text-emerald-100/70 hover:text-white'
