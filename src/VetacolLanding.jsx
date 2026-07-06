@@ -53,7 +53,7 @@ const VetacolLanding = () => {
   };
 
   return (
-    <div className="min-h-screen font-sans text-gray-800 bg-slate-50 selection:bg-[#00513b] selection:text-white relative">
+    <div className="min-h-screen font-sans text-gray-800 bg-slate-50 selection:bg-[#00513b] selection:text-white relative break-keep">
       
       {/* 1. 최상단 신뢰도 배너 */}
       <div className="bg-[#002b1f] text-emerald-300 text-xs sm:text-sm py-2.5 px-4 text-center font-medium tracking-wide border-b border-emerald-800/40">
