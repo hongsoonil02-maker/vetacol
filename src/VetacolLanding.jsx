@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { MessageCircle, X, Send, Globe } from 'lucide-react';
+import { translations } from './translations';
 
 const VetacolLanding = () => {
+  const [lang, setLang] = useState('ko');
+  const t = translations[lang];
+  
   const [activeTab, setActiveTab] = useState('all');
   
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
-    { role: 'ai', content: '안녕하세요! 베타콜 전문 수의사 AI 상담사입니다. 송아지 설사병 예방이나 베타콜 급여에 대해 궁금한 점이 있으신가요?' }
+    { role: 'ai', key: 'initialMsg' }
   ]);
   const [chatInput, setChatInput] = useState('');
 
@@ -18,115 +22,101 @@ const VetacolLanding = () => {
     
     // Mock AI response
     setTimeout(() => {
-      let aiResponse = "접수되었습니다. 더 자세한 상담이 필요하시면 하단의 상담 문의 폼을 이용해주시거나 고문 수의사에게 직접 연락 부탁드립니다.";
-      if (chatInput.includes('급여') || chatInput.includes('언제')) {
-        aiResponse = "베타콜은 출생 직후 15ml 시린지를 입안에 직접 짜서 1회 급여하는 것이 가장 좋습니다. 부족한 에너지를 빠르게 공급합니다.";
-      } else if (chatInput.includes('효과') || chatInput.includes('장점')) {
-        aiResponse = "베타콜은 초유, 유청단백질, 바실러스 2종을 포함하여 초기 활력과 면역, 그리고 장 건강까지 돕는 프랑스산 프리미엄 영양제입니다.";
-      } else if (chatInput.includes('보관')) {
-        aiResponse = "직사광선을 피하고 실온에 보관하시면 됩니다. 개봉 후에는 즉시 전량 급여하시기를 권장합니다.";
+      let aiResponseKey = "defaultResponse";
+      const lower = chatInput.toLowerCase();
+      if (chatInput.includes('급여') || chatInput.includes('언제') || lower.includes('when') || lower.includes('dose') || lower.includes('how') || lower.includes('give') || lower.includes('administer')) {
+        aiResponseKey = "dosageResponse";
+      } else if (chatInput.includes('효과') || chatInput.includes('장점') || lower.includes('benefit') || lower.includes('effect') || lower.includes('advantage') || lower.includes('why')) {
+        aiResponseKey = "benefitsResponse";
+      } else if (chatInput.includes('보관') || lower.includes('store') || lower.includes('storage') || lower.includes('keep')) {
+        aiResponseKey = "storageResponse";
       }
       
-      setChatMessages(prev => [...prev, { role: 'ai', content: aiResponse }]);
+      setChatMessages(prev => [...prev, { role: 'ai', key: aiResponseKey }]);
     }, 1000);
     
     setChatInput('');
   };
 
-  const handleQuickReply = (question) => {
-    setChatInput(question);
+  const handleQuickReply = (questionKey) => {
+    const questionText = t.chatbot[questionKey];
+    setChatMessages([...chatMessages, { role: 'user', content: questionText }]);
+    
+    setTimeout(() => {
+      let aiResponseKey = "defaultResponse";
+      if (questionKey === 'quick1') aiResponseKey = "benefitsResponse";
+      else if (questionKey === 'quick2') aiResponseKey = "dosageResponse";
+      else if (questionKey === 'quick3') aiResponseKey = "storageResponse";
+      
+      setChatMessages(prev => [...prev, { role: 'ai', key: aiResponseKey }]);
+    }, 1000);
   };
 
-  // 5대 핵심 성분 데이터
-  const ingredients = [
-    {
-      id: 'immuno',
-      category: '초기 활력 & 면역 공급',
-      title: '초유 · 유청단백질 · 중쇄지방산(MCT)',
-      description: '출생 직후 부족한 면역글로불린을 빠르게 공급하고, 체내 흡수가 빠른 MCT와 텍스트로스로 즉각적인 에너지를 보충합니다.',
-      icon: '🛡️',
-      badge: '빠른 에너지 보충',
-      color: 'from-blue-500/10 to-indigo-500/10 border-blue-200 text-blue-900',
-    },
-    {
-      id: 'gut',
-      category: '장내 환경 개선',
-      title: '바실러스 2종 (서브틸리스 & 리체니포미스)',
-      description: '장내 유익균 정상 세균총을 유도하여 출생 초기 송아지의 설사 예방을 돕고 장 건전성을 강력하게 유지합니다.',
-      icon: '🦠',
-      badge: '설사 예방 도움',
-      color: 'from-emerald-500/10 to-teal-500/10 border-emerald-200 text-emerald-900',
-    },
-    {
-      id: 'vitamin',
-      category: '멀티 비타민 복합체',
-      title: '비타민 A, C, D3, E 고함량 배합',
-      description: '강력한 항산화 작용을 통해 스트레스를 완화하고 송아지의 골격 형성 및 면역 기능 활성화를 지원합니다.',
-      icon: '☀️',
-      badge: '항산화 & 성장 촉진',
-      color: 'from-amber-500/10 to-orange-500/10 border-amber-200 text-amber-900',
-    },
-    {
-      id: 'mineral',
-      category: '고흡수 미네랄',
-      title: '아연 · 망간 · 구리 글리시네이트 & 셀레늄',
-      description: '일반 무기염 대비 체내 흡수가 매우 용이한 킬레이트(글리시네이트) 형태의 미량 광물질로 신진대사를 극대화합니다.',
-      icon: '💎',
-      badge: '신진대사 활성화',
-      color: 'from-purple-500/10 to-pink-500/10 border-purple-200 text-purple-900',
-    },
-    {
-      id: 'gut',
-      category: '기호성 극대화',
-      title: '치커리 이눌린 & 카라멜 배합',
-      description: '천연 프리바이오틱스인 치커리 이눌린과 달콤한 카라멜 성분을 첨가하여 송아지가 거부감 없이 즐겁게 섭취합니다.',
-      icon: '🌿',
-      badge: '스트레스 없는 섭취',
-      color: 'from-lime-500/10 to-green-500/10 border-lime-200 text-lime-900',
-    },
-  ];
-
   return (
-    <div className="min-h-screen font-sans text-gray-800 bg-slate-50 selection:bg-[#00513b] selection:text-white">
+    <div className="min-h-screen font-sans text-gray-800 bg-slate-50 selection:bg-[#00513b] selection:text-white relative">
       
+      {/* 0. 고정 플로팅 언어 토글 버튼 (KR / EN) */}
+      <div className="fixed top-3 right-3 sm:top-4 sm:right-6 z-[70] flex items-center bg-slate-900/90 backdrop-blur-md border border-emerald-500/40 p-1 rounded-full shadow-2xl animate-fade-in ring-2 ring-white/10">
+        <button
+          onClick={() => setLang('ko')}
+          className={`px-3 py-1.5 rounded-full text-xs font-extrabold transition-all duration-300 flex items-center gap-1.5 ${
+            lang === 'ko'
+              ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-lg scale-105'
+              : 'text-gray-300 hover:text-white'
+          }`}
+        >
+          <span>🇰🇷</span> 한국어
+        </button>
+        <button
+          onClick={() => setLang('en')}
+          className={`px-3 py-1.5 rounded-full text-xs font-extrabold transition-all duration-300 flex items-center gap-1.5 ${
+            lang === 'en'
+              ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-lg scale-105'
+              : 'text-gray-300 hover:text-white'
+          }`}
+        >
+          <span>🇺🇸</span> English
+        </button>
+      </div>
+
       {/* 1. 최상단 신뢰도 배너 */}
       <div className="bg-[#002b1f] text-emerald-300 text-xs sm:text-sm py-2.5 px-4 text-center font-medium tracking-wide border-b border-emerald-800/40">
         <span className="inline-flex items-center justify-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          🇫🇷 프랑스 VETALIS 직수입 완제품 | (주)한국아그로 × 고문수의사 제임스 홍 임상 솔루션
+          {t.banner}
         </span>
       </div>
 
       {/* 2. 히어로 헤더 */}
-      <header className="relative bg-gradient-to-br from-[#00513b] via-[#00664a] to-[#003828] text-white pt-16 pb-24 px-6 overflow-hidden shadow-xl">
+      <header className="relative bg-gradient-to-br from-[#00513b] via-[#00664a] to-[#003828] text-white pt-20 pb-24 px-6 overflow-hidden shadow-xl">
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-r from-emerald-400/10 via-teal-300/10 to-transparent rounded-full blur-3xl pointer-events-none" />
         
         <div className="max-w-4xl mx-auto text-center relative z-10 space-y-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-xs sm:text-sm font-semibold tracking-wide border border-white/20 shadow-inner">
-            <span>🌟 유럽이 선택한 프리미엄 송아지 건강 솔루션</span>
+            <span>{t.hero.badge}</span>
           </div>
           
           <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white drop-shadow-md leading-tight">
-            송아지의 건강한 시작! <br className="sm:hidden" />
-            <span className="text-emerald-300">베타콜</span>{' '}
-            <span className="text-2xl sm:text-4xl font-light text-emerald-100/90">(VETACOL)</span>
+            {t.hero.title1} <br className="sm:hidden" />
+            <span className="text-emerald-300">{t.hero.title2}</span>{' '}
+            <span className="text-2xl sm:text-4xl font-light text-emerald-100/90">{t.hero.title3}</span>
           </h1>
           
           <p className="text-lg sm:text-2xl text-emerald-100 font-medium max-w-2xl mx-auto pt-2 leading-relaxed break-keep">
-            출생 직후부터 필요한 <strong className="text-white underline decoration-emerald-400 decoration-4 underline-offset-4">면역 · 장 건강 · 기력</strong>까지 
-            <br className="hidden sm:inline" /> 15ml 시린지 단 한 번으로 완벽하게 해결합니다.
+            {t.hero.subtitle1} <strong className="text-white underline decoration-emerald-400 decoration-4 underline-offset-4">{t.hero.subtitleHighlight}</strong>{t.hero.subtitle2} 
+            <br className="hidden sm:inline" /> {t.hero.subtitle3}
           </p>
 
           {/* 간편 요약 배지 */}
           <div className="flex flex-wrap justify-center gap-3 pt-6 text-xs sm:text-sm font-semibold">
             <div className="bg-black/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/15 flex items-center gap-2">
-              <span>💉</span> 1두당 1시린지(15ml) 직접 투여
+              <span>💉</span> {t.hero.badge1}
             </div>
             <div className="bg-black/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/15 flex items-center gap-2">
-              <span>⚡</span> 출생 직후 빠른 골든타임 흡수
+              <span>⚡</span> {t.hero.badge2}
             </div>
             <div className="bg-black/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/15 flex items-center gap-2">
-              <span>🏆</span> 축산 선진국 프랑스 혁신 포뮬러
+              <span>🏆</span> {t.hero.badge3}
             </div>
           </div>
 
@@ -139,11 +129,11 @@ const VetacolLanding = () => {
               className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-black text-lg sm:text-xl rounded-2xl shadow-xl hover:shadow-amber-500/30 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 group border-2 border-yellow-200 animate-bounce sm:animate-none"
             >
               <span className="text-2xl">🚀</span>
-              <span>쿠팡 공식 스토어 바로 구매하기</span>
+              <span>{t.hero.coupangBtn}</span>
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </a>
             <div className="text-xs sm:text-sm text-emerald-200 font-medium flex items-center gap-1.5 bg-black/30 px-4 py-3 rounded-xl border border-white/10">
-              <span className="text-amber-400">⚡</span> 로켓/택배 빠른 배송 & 100% 정품 보증
+              <span className="text-amber-400">⚡</span> {t.hero.coupangSub}
             </div>
           </div>
         </div>
@@ -155,19 +145,14 @@ const VetacolLanding = () => {
         {/* 3. 4대 특장점 (Why Vetacol?) */}
         <section className="bg-white p-6 sm:p-10 rounded-3xl shadow-xl border border-gray-100">
           <div className="text-center max-w-2xl mx-auto mb-8">
-            <h2 className="text-xs font-bold text-emerald-600 tracking-widest uppercase mb-1">Why Vetacol?</h2>
+            <h2 className="text-xs font-bold text-emerald-600 tracking-widest uppercase mb-1">{t.benefits.why}</h2>
             <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
-              송아지 생존율과 성장을 극대화하는 <span className="text-[#00513b]">4대 특장점</span>
+              {t.benefits.title1} <span className="text-[#00513b]">{t.benefits.title2}</span>
             </h3>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { title: '면역력 강화', sub: '초유 & 유청단백질 함유', desc: '초기 면역 공백을 채워주고 질병 저항성 강화', icon: '🛡️' },
-              { title: '장 건강 관리', sub: '바실러스 2종 프로바이오틱스', desc: '장내 유익균 정상 세균총 형성 및 설사 예방 도움', icon: '🦠' },
-              { title: '성장 & 기력 지원', sub: '멀티 비타민 & 글리시네이트', desc: '체내 흡수율 높은 미네랄로 활력과 성장 촉진', icon: '📈' },
-              { title: '간편한 급여', sub: '15ml 눈금 시린지 타입', desc: '출생 직후 입안에 직접 짜서 급여하는 위생적 설계', icon: '💉' },
-            ].map((item, idx) => (
+            {t.benefits.items.map((item, idx) => (
               <div key={idx} className="p-6 rounded-2xl bg-gradient-to-b from-slate-50 to-white border border-gray-200/80 shadow-sm hover:shadow-md hover:border-emerald-500/50 transition-all duration-300 group">
                 <div className="text-4xl mb-3 transform group-hover:scale-110 transition-transform duration-200">{item.icon}</div>
                 <h4 className="text-lg font-bold text-gray-900 group-hover:text-[#00513b] transition-colors">{item.title}</h4>
@@ -184,13 +169,13 @@ const VetacolLanding = () => {
           
           <div className="text-center max-w-2xl mx-auto mb-8 relative z-10">
             <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-semibold uppercase tracking-wider">
-              🎬 Official Video Presentation
+              {t.video.badge}
             </span>
             <h2 className="text-2xl sm:text-4xl font-black mt-3 mb-2">
-              <span className="text-emerald-400">5분으로 끝내는</span> 송아지 골든타임
+              <span className="text-emerald-400">{t.video.title1}</span> {t.video.title2}
             </h2>
             <p className="text-xs sm:text-sm text-gray-300 leading-relaxed break-keep">
-              (주)한국아그로 × 고문수의사 제임스 홍 팀이 직접 안내하는 베타콜 핵심 효과와 급여 가이드를 영상으로 확인하세요.
+              {t.video.desc}
             </p>
           </div>
 
@@ -203,23 +188,23 @@ const VetacolLanding = () => {
               playsInline
             >
               <source src="./vetacol_video3.mp4" type="video/mp4" />
-              해당 브라우저에서는 동영상 재생을 지원하지 않습니다. 크롬 또는 엣지 브라우저를 이용해 주세요.
+              {t.video.noSupport}
             </video>
           </div>
 
           {/* 영상 핵심 하이라이트 요약 */}
           <div className="max-w-4xl mx-auto mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 relative z-10 text-center">
             <div className="bg-slate-800/80 p-3.5 rounded-xl border border-white/10 flex flex-col items-center">
-              <span className="text-xs font-bold text-amber-400 mb-0.5">💡 STEP 1. 초기 면역 공백</span>
-              <p className="text-[11px] text-gray-300">출생 직후 6~12시간 내 초유 면역글로불린 흡수의 중요성</p>
+              <span className="text-xs font-bold text-amber-400 mb-0.5">{t.video.step1Title}</span>
+              <p className="text-[11px] text-gray-300">{t.video.step1Desc}</p>
             </div>
             <div className="bg-slate-800/80 p-3.5 rounded-xl border border-white/10 flex flex-col items-center">
-              <span className="text-xs font-bold text-emerald-400 mb-0.5">🛡️ STEP 2. 5대 복합 포뮬러</span>
-              <p className="text-[11px] text-gray-300">초유·유청·바실러스·MCT·비타민의 과학적 상승 작용</p>
+              <span className="text-xs font-bold text-emerald-400 mb-0.5">{t.video.step2Title}</span>
+              <p className="text-[11px] text-gray-300">{t.video.step2Desc}</p>
             </div>
             <div className="bg-slate-800/80 p-3.5 rounded-xl border border-white/10 flex flex-col items-center">
-              <span className="text-xs font-bold text-teal-300 mb-0.5">💉 STEP 3. 15ml 시린지 급여</span>
-              <p className="text-[11px] text-gray-300">입안 깊숙이 1회 주입으로 완결되는 가장 위생적인 투여법</p>
+              <span className="text-xs font-bold text-teal-300 mb-0.5">{t.video.step3Title}</span>
+              <p className="text-[11px] text-gray-300">{t.video.step3Desc}</p>
             </div>
           </div>
 
@@ -231,7 +216,7 @@ const VetacolLanding = () => {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-black text-sm sm:text-base rounded-xl shadow-lg hover:shadow-xl transition-all border border-yellow-200"
             >
-              <span>🛒 영상 속 베타콜, 쿠팡에서 지금 바로 주문하기</span>
+              <span>{t.video.cta}</span>
               <span>→</span>
             </a>
           </div>
@@ -241,41 +226,13 @@ const VetacolLanding = () => {
         <section className="space-y-6">
           <div className="text-center max-w-2xl mx-auto">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
-              이런 송아지에게 <span className="bg-gradient-to-r from-[#00513b] to-emerald-600 bg-clip-text text-transparent">강력 추천합니다!</span>
+              {t.targets.title1} <span className="bg-gradient-to-r from-[#00513b] to-emerald-600 bg-clip-text text-transparent">{t.targets.title2}</span>
             </h2>
-            <p className="text-sm sm:text-base text-gray-600 mt-2">농장의 폐사율을 낮추고 초기 성장을 결정짓는 골든타임을 놓치지 마세요.</p>
+            <p className="text-sm sm:text-base text-gray-600 mt-2">{t.targets.subtitle}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                num: '01',
-                title: '출생 직후 송아지',
-                sub: '초기 면역 형성 시급',
-                desc: '어미의 초유 섭취가 부족하거나, 출생 직후 확실하고 빠른 면역력 형성이 필요할 때 즉시 투여하세요.',
-                tag: '필수 기본 투여',
-                borderColor: 'border-blue-200 hover:border-blue-500',
-                badgeBg: 'bg-blue-100 text-blue-800',
-              },
-              {
-                num: '02',
-                title: '설사 징후 및 장 장애 시',
-                sub: '장내 세균총 정상화',
-                desc: '변이 무르고 설사 징후가 보일 때, 바실러스 2종 유익균이 장내 환경을 빠르게 정상화하여 회복을 돕습니다.',
-                tag: '설사 예방 · 회복',
-                borderColor: 'border-emerald-200 hover:border-emerald-500',
-                badgeBg: 'bg-emerald-100 text-emerald-800',
-              },
-              {
-                num: '03',
-                title: '기력 저하 · 허약 송아지',
-                sub: '고에너지 · 미네랄 보충',
-                desc: '스스로 일어서지 못하거나 기력이 떨어져 활력 및 긴급 보충 영양 공급이 시급할 때 즉각 에너지를 부여합니다.',
-                tag: '긴급 활력 보강',
-                borderColor: 'border-amber-200 hover:border-amber-500',
-                badgeBg: 'bg-amber-100 text-amber-800',
-              },
-            ].map((target, idx) => (
+            {t.targets.items.map((target, idx) => (
               <div key={idx} className={`bg-white p-6 rounded-2xl border-2 ${target.borderColor} shadow-md hover:shadow-xl transition-all duration-300 relative overflow-hidden flex flex-col justify-between`}>
                 <div>
                   <div className="flex justify-between items-center mb-4">
@@ -287,7 +244,7 @@ const VetacolLanding = () => {
                   <p className="text-sm text-gray-600 leading-relaxed break-keep">{target.desc}</p>
                 </div>
                 <div className="mt-6 pt-4 border-t border-gray-100 flex items-center text-xs font-bold text-[#00513b]">
-                  <span>✨ 1시린지(15ml) 직접 급여</span>
+                  <span>{t.targets.bottomText}</span>
                 </div>
               </div>
             ))}
@@ -300,18 +257,18 @@ const VetacolLanding = () => {
           
           <div className="max-w-3xl mx-auto text-center mb-10 relative z-10">
             <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-semibold uppercase tracking-wider">
-              Scientific Formulation
+              {t.ingredientsSection.badge}
             </span>
             <h2 className="text-2xl sm:text-4xl font-black mt-3 mb-2">
-              유럽 엄격한 기준의 <span className="text-emerald-400">5대 핵심 복합 성분</span>
+              {t.ingredientsSection.title1} <span className="text-emerald-400">{t.ingredientsSection.title2}</span>
             </h2>
             <p className="text-sm sm:text-base text-gray-300">
-              송아지 성장에 필수적인 영양소만을 과학적으로 배합한 프랑스 VETALIS 혁신 기술력입니다.
+              {t.ingredientsSection.subtitle}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 relative z-10">
-            {ingredients.map((ing, idx) => (
+            {t.ingredientsSection.items.map((ing, idx) => (
               <div key={idx} className="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl border border-slate-700 hover:border-emerald-500/50 transition-all duration-300 flex flex-col justify-between">
                 <div>
                   <div className="flex justify-between items-start mb-4">
@@ -330,10 +287,10 @@ const VetacolLanding = () => {
             {/* 6번째 카드: 기호성 및 제조기술 약속 */}
             <div className="bg-gradient-to-br from-[#00513b] to-emerald-800 p-6 rounded-2xl border border-emerald-600/50 flex flex-col justify-center text-center items-center shadow-lg">
               <div className="text-3xl mb-2">🇫🇷</div>
-              <h3 className="text-lg font-extrabold text-white mb-1">VETALIS Laboratoire</h3>
-              <p className="text-xs text-emerald-100 mb-3">프랑스 제조소 승인번호 α FR 16089043</p>
+              <h3 className="text-lg font-extrabold text-white mb-1">{t.ingredientsSection.card6Title}</h3>
+              <p className="text-xs text-emerald-100 mb-3">{t.ingredientsSection.card6Sub}</p>
               <span className="px-3 py-1 bg-white text-[#00513b] rounded-full text-xs font-black shadow">
-                엄격한 완제품 품질 관리
+                {t.ingredientsSection.card6Badge}
               </span>
             </div>
           </div>
@@ -342,26 +299,26 @@ const VetacolLanding = () => {
         {/* 6. 급여 방법 및 사용 가이드 */}
         <section className="bg-white p-8 sm:p-10 rounded-3xl shadow-lg border border-gray-200">
           <h2 className="text-2xl font-extrabold text-gray-900 mb-6 text-center">
-            📋 사용 가이드 & 급여 방법 <span className="text-xs font-normal text-gray-500 block sm:inline mt-1 sm:mt-0">(Directions)</span>
+            {t.directions.title} <span className="text-xs font-normal text-gray-500 block sm:inline mt-1 sm:mt-0">{t.directions.sub}</span>
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
             <div className="p-5 rounded-2xl bg-emerald-50/50 border border-emerald-100 flex flex-col items-center">
               <div className="w-12 h-12 rounded-full bg-[#00513b] text-white flex items-center justify-center font-bold text-lg mb-3 shadow-md">1</div>
-              <h3 className="font-bold text-gray-900 mb-1">급여 시기 (골든타임)</h3>
-              <p className="text-sm text-gray-600 break-keep">송아지 출생 후 <strong className="text-[#00513b]">가능한 빨리 투여</strong>하십시오.<br />(필요 시 6~12시간 후 추가 급여 권장)</p>
+              <h3 className="font-bold text-gray-900 mb-1">{t.directions.step1Title}</h3>
+              <p className="text-sm text-gray-600 break-keep">{t.directions.step1Desc1} <strong className="text-[#00513b]">{t.directions.step1Strong}</strong> {t.directions.step1Desc2}<br />{t.directions.step1Sub}</p>
             </div>
 
             <div className="p-5 rounded-2xl bg-emerald-50/50 border border-emerald-100 flex flex-col items-center">
               <div className="w-12 h-12 rounded-full bg-[#00513b] text-white flex items-center justify-center font-bold text-lg mb-3 shadow-md">2</div>
-              <h3 className="font-bold text-gray-900 mb-1">급여량 및 방법</h3>
-              <p className="text-sm text-gray-600 break-keep">1두당 <strong className="text-[#00513b]">15ml 주입기 1개</strong>를 송아지 입안 안쪽에 넣어 직접 주입합니다.</p>
+              <h3 className="font-bold text-gray-900 mb-1">{t.directions.step2Title}</h3>
+              <p className="text-sm text-gray-600 break-keep">{t.directions.step2Desc1} <strong className="text-[#00513b]">{t.directions.step2Strong}</strong>{t.directions.step2Desc2}</p>
             </div>
 
             <div className="p-5 rounded-2xl bg-emerald-50/50 border border-emerald-100 flex flex-col items-center">
               <div className="w-12 h-12 rounded-full bg-[#00513b] text-white flex items-center justify-center font-bold text-lg mb-3 shadow-md">3</div>
-              <h3 className="font-bold text-gray-900 mb-1">보관 및 유통기한</h3>
-              <p className="text-sm text-gray-600 break-keep"><strong className="text-[#00513b]">건냉한 곳에 차광 보관</strong> (사용 후 밀봉)<br />유통기한: 제조일로부터 18개월</p>
+              <h3 className="font-bold text-gray-900 mb-1">{t.directions.step3Title}</h3>
+              <p className="text-sm text-gray-600 break-keep"><strong className="text-[#00513b]">{t.directions.step3Strong}</strong> {t.directions.step3Desc1}<br />{t.directions.step3Desc2}</p>
             </div>
           </div>
         </section>
@@ -373,19 +330,19 @@ const VetacolLanding = () => {
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
             <div className="space-y-4 relative z-10">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-black/20 backdrop-blur-md rounded-full text-xs font-extrabold tracking-wide text-yellow-200 border border-yellow-300/30">
-                <span>⚡ 쿠팡 로켓/택배 빠른 배송</span>
+                <span>{t.cta.leftBadge}</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-black leading-tight">
-                쿠팡 공식 스토어에서<br />
-                <span className="text-yellow-200">즉시 구매하고 빠르게 받아보세요!</span>
+                {t.cta.leftTitle1}<br />
+                <span className="text-yellow-200">{t.cta.leftTitle2}</span>
               </h2>
               <p className="text-xs sm:text-sm text-amber-100 leading-relaxed break-keep">
-                복잡한 상담 없이 온라인에서 간편하게 주문하세요.<br />
-                <strong>(주)한국아그로 공식 입점 제품</strong>으로 100% 정품 품질을 보증합니다.
+                {t.cta.leftDesc1}<br />
+                <strong>{t.cta.leftDesc2}</strong>{t.cta.leftDesc3}
               </p>
               <div className="bg-black/30 p-3 rounded-xl text-xs space-y-1 border border-white/10">
-                <div className="font-bold text-yellow-300">📦 상품명: 베타콜 Vetacol 송아지 초유 면역 영양제</div>
-                <div className="text-amber-100">15ml 눈금 시린지 액상 타입 (초유·유청·바실러스·비타민)</div>
+                <div className="font-bold text-yellow-300">{t.cta.leftBoxTitle}</div>
+                <div className="text-amber-100">{t.cta.leftBoxSub}</div>
               </div>
             </div>
             <div className="mt-8 relative z-10">
@@ -395,7 +352,7 @@ const VetacolLanding = () => {
                 rel="noopener noreferrer"
                 className="w-full py-4 bg-white hover:bg-emerald-50 text-[#00513b] hover:text-emerald-900 rounded-2xl text-base sm:text-lg font-black shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 transform group-hover:translate-y-[-2px] border-2 border-emerald-600/10"
               >
-                <span>🛒 쿠팡에서 바로 주문하기</span>
+                <span>{t.cta.leftBtn}</span>
                 <span>→</span>
               </a>
             </div>
@@ -405,15 +362,15 @@ const VetacolLanding = () => {
           <div className="bg-gradient-to-br from-emerald-900 via-[#00513b] to-teal-900 rounded-3xl p-8 text-white shadow-2xl flex flex-col justify-between border border-emerald-700/50 relative overflow-hidden">
             <div className="space-y-4 relative z-10">
               <span className="inline-block px-3 py-1 bg-emerald-500/30 text-emerald-200 rounded-full text-xs font-semibold">
-                💬 (주)한국아그로 전문 상담
+                {t.cta.rightBadge}
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold leading-tight">
-                농장 맞춤형 솔루션 및<br />
-                <span className="text-emerald-300">대량 구매 · 기술 상담</span>
+                {t.cta.rightTitle1}<br />
+                <span className="text-emerald-300">{t.cta.rightTitle2}</span>
               </h2>
               <p className="text-xs sm:text-sm text-emerald-100/80 leading-relaxed break-keep">
-                스마트폰 카메라로 QR 코드를 스캔하여 간편하게 접속하거나 거래처에 공유해 보세요.<br />
-                <strong className="text-white">제임스 홍 고문수의사팀 및 전문 임상 컨설턴트</strong>가 친절하게 안내해 드립니다.
+                {t.cta.rightDesc1}<br />
+                <strong className="text-white">{t.cta.rightStrong}</strong>{t.cta.rightDesc2}
               </p>
 
               {/* 공식 QR 코드 스캔 박스 */}
@@ -421,29 +378,29 @@ const VetacolLanding = () => {
                 <img src="./vetacol_qr.png" alt="베타콜 공식 QR코드" className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl shrink-0 border border-slate-200 shadow" />
                 <div className="space-y-1">
                   <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-100 text-[#00513b] text-[11px] font-extrabold">
-                    <span>📱 스마트폰 카메라 간편 스캔</span>
+                    <span>{t.cta.qrBadge}</span>
                   </div>
                   <div className="text-xs sm:text-sm font-extrabold text-slate-900 leading-tight">
-                    베타콜 공식 랜딩페이지 접속 QR
+                    {t.cta.qrTitle}
                   </div>
                   <p className="text-[11px] text-slate-600 leading-relaxed break-keep">
-                    포스터, 리플렛, 명함 인용 가능! 스마트폰 카메라로 스캔 시 즉시 모바일 페이지로 연결됩니다.
+                    {t.cta.qrDesc}
                   </p>
                 </div>
               </div>
 
               <div className="pt-1 flex flex-col gap-1.5 text-xs text-emerald-200">
-                <span className="flex items-center gap-1.5">📞 고객상담: <strong className="text-white text-sm">02-6949-5708</strong></span>
-                <span className="flex items-center gap-1.5">📱 모바일 상담: <strong className="text-white text-sm">010-5407-5708</strong></span>
-                <span className="flex items-center gap-1.5">🌐 공식 웹사이트: www.agrokorea.kr</span>
+                <span className="flex items-center gap-1.5">{t.cta.phone1} <strong className="text-white text-sm">02-6949-5708</strong></span>
+                <span className="flex items-center gap-1.5">{t.cta.phone2} <strong className="text-white text-sm">010-5407-5708</strong></span>
+                <span className="flex items-center gap-1.5">{t.cta.web}</span>
               </div>
             </div>
 
             {/* 하단 상담 연결 버튼 / 간편 안내 */}
             <div className="mt-8 pt-4 border-t border-emerald-800/80 flex items-center justify-between gap-4">
               <div className="text-xs text-emerald-300">
-                * 평일 09:00 ~ 18:00 (주말/공휴일 휴무)<br />
-                * 전국 농장 맞춤 컨설팅 지원
+                {t.cta.footerNote1}<br />
+                {t.cta.footerNote2}
               </div>
               <a
                 href="http://www.agrokorea.kr"
@@ -451,7 +408,7 @@ const VetacolLanding = () => {
                 rel="noopener noreferrer"
                 className="px-5 py-3 bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow transition-colors flex items-center gap-1 shrink-0"
               >
-                <span>웹사이트 방문</span>
+                <span>{t.cta.visitBtn}</span>
                 <span>→</span>
               </a>
             </div>
@@ -466,10 +423,10 @@ const VetacolLanding = () => {
           <span className="text-2xl sm:text-3xl shrink-0 animate-bounce">🚀</span>
           <div className="truncate">
             <div className="text-[11px] sm:text-xs text-amber-400 font-bold flex items-center gap-1">
-              <span>쿠팡 공식 입점</span>
+              <span>{t.floatingBar.badge}</span>
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
             </div>
-            <div className="text-xs sm:text-sm font-extrabold text-white truncate">베타콜 Vetacol 송아지 초유 면역 영양제 15ml</div>
+            <div className="text-xs sm:text-sm font-extrabold text-white truncate">{t.floatingBar.title}</div>
           </div>
         </div>
         <a
@@ -478,7 +435,7 @@ const VetacolLanding = () => {
           rel="noopener noreferrer"
           className="shrink-0 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-black text-xs sm:text-sm rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-1.5 border border-yellow-200"
         >
-          <span>🛒 쿠팡 구매하기</span>
+          <span>{t.floatingBar.btn}</span>
           <span>→</span>
         </a>
       </div>
@@ -487,23 +444,23 @@ const VetacolLanding = () => {
       <footer className="bg-slate-900 text-slate-400 py-12 px-6 border-t border-slate-800 text-xs">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <div className="space-y-2">
-            <h4 className="text-white font-bold text-sm">(주)한국아그로 | 고문수의사 제임스 홍</h4>
+            <h4 className="text-white font-bold text-sm">{t.footer.company}</h4>
             <p className="leading-relaxed">
-              서울특별시 마포구 큰우물로 75 성지빌딩 1506호<br />
-              TEL: 02-6949-5708 | Mobile: 010-5407-5708<br />
-              웹사이트: <a href="http://www.agrokorea.kr" className="text-emerald-400 hover:underline">www.agrokorea.kr</a>
+              {t.footer.address}<br />
+              {t.footer.tel}<br />
+              {t.footer.web} <a href="http://www.agrokorea.kr" className="text-emerald-400 hover:underline">www.agrokorea.kr</a>
             </p>
           </div>
           <div className="space-y-1 text-slate-400">
-            <p><strong className="text-slate-300">제조원:</strong> VETALIS Laboratoire (프랑스, 제조소 승인번호 α FR 16089043)</p>
-            <p><strong className="text-slate-300">수입원:</strong> (주)엘켐코바이오 (서울 중랑구 신내역로 3길 신내데시앙플렉스 B동 104호)</p>
-            <p><strong className="text-slate-300">사료의 성분등록번호:</strong> 제 서울-16019호 | <strong className="text-slate-300">명칭:</strong> 양축용 영양보충제(특수배합사료)</p>
-            <p><strong className="text-slate-300">등록성분량:</strong> 조단백질 13.4% 이상, 조지방 2.3% 이상, 수분 46.0% 이하</p>
+            <p><strong className="text-slate-300">{t.footer.manufacturer}</strong> {t.footer.manufacturerVal}</p>
+            <p><strong className="text-slate-300">{t.footer.importer}</strong> {t.footer.importerVal}</p>
+            <p><strong className="text-slate-300">{t.footer.regNum}</strong> {t.footer.regNumVal} | <strong className="text-slate-300">{t.footer.name}</strong> {t.footer.nameVal}</p>
+            <p><strong className="text-slate-300">{t.footer.ingredients}</strong> {t.footer.ingredientsVal}</p>
           </div>
         </div>
         <div className="max-w-5xl mx-auto pt-6 border-t border-slate-800 text-center text-slate-500 space-y-1">
-          <p>※ 본 제품은 동물용 의약품이 아닌 동물용 보조사료(영양보충제)입니다. 사용 전 반드시 제품 설명서를 확인하십시오.</p>
-          <p>Copyright © Korea Agro Co., Ltd. All rights reserved.</p>
+          <p>{t.footer.notice}</p>
+          <p>{t.footer.copyright}</p>
         </div>
       </footer>
 
@@ -517,8 +474,8 @@ const VetacolLanding = () => {
                   <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm sm:text-base">베타콜 수의사 AI</h3>
-                  <p className="text-[10px] sm:text-xs text-emerald-200">24시간 전문 수의 상담 대기중</p>
+                  <h3 className="font-bold text-sm sm:text-base">{t.chatbot.title}</h3>
+                  <p className="text-[10px] sm:text-xs text-emerald-200">{t.chatbot.status}</p>
                 </div>
               </div>
               <button onClick={() => setIsChatOpen(false)} className="text-emerald-100 hover:text-white transition-colors">
@@ -534,16 +491,16 @@ const VetacolLanding = () => {
                       ? 'bg-[#00513b] text-white rounded-tr-sm' 
                       : 'bg-white border border-gray-200 text-gray-800 rounded-tl-sm shadow-sm'
                   }`}>
-                    {msg.content}
+                    {msg.key ? t.chatbot[msg.key] : msg.content}
                   </div>
                 </div>
               ))}
               
               {/* Quick Replies */}
               <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2 sm:mt-4">
-                <button onClick={() => handleQuickReply('베타콜의 장점이 뭔가요?')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">장점이 뭔가요?</button>
-                <button onClick={() => handleQuickReply('언제 어떻게 급여하나요?')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">언제 급여하나요?</button>
-                <button onClick={() => handleQuickReply('제품 보관 방법은요?')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">보관방법?</button>
+                <button onClick={() => handleQuickReply('quick1')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">{t.chatbot.quick1Label}</button>
+                <button onClick={() => handleQuickReply('quick2')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">{t.chatbot.quick2Label}</button>
+                <button onClick={() => handleQuickReply('quick3')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">{t.chatbot.quick3Label}</button>
               </div>
             </div>
             
@@ -552,7 +509,7 @@ const VetacolLanding = () => {
                 type="text" 
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                placeholder="궁금한 점을 질문해보세요..." 
+                placeholder={t.chatbot.placeholder}
                 className="flex-1 bg-gray-100 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#00513b]"
               />
               <button type="submit" className="w-8 h-8 sm:w-10 sm:h-10 bg-[#00513b] text-white rounded-full flex items-center justify-center hover:bg-[#003828] transition-colors shrink-0 shadow-md">
