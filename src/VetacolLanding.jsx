@@ -24,11 +24,11 @@ const VetacolLanding = () => {
     setTimeout(() => {
       let aiResponseKey = "defaultResponse";
       const lower = chatInput.toLowerCase();
-      if (chatInput.includes('급여') || chatInput.includes('언제') || lower.includes('when') || lower.includes('dose') || lower.includes('how') || lower.includes('give') || lower.includes('administer')) {
+      if (chatInput.includes('급여') || chatInput.includes('언제') || lower.includes('when') || lower.includes('dose') || lower.includes('how') || lower.includes('give') || lower.includes('administer') || lower.includes('quand') || lower.includes('comment') || lower.includes('dose') || lower.includes('administrer')) {
         aiResponseKey = "dosageResponse";
-      } else if (chatInput.includes('효과') || chatInput.includes('장점') || lower.includes('benefit') || lower.includes('effect') || lower.includes('advantage') || lower.includes('why')) {
+      } else if (chatInput.includes('효과') || chatInput.includes('장점') || lower.includes('benefit') || lower.includes('effect') || lower.includes('advantage') || lower.includes('why') || lower.includes('avantage') || lower.includes('effet') || lower.includes('pourquoi')) {
         aiResponseKey = "benefitsResponse";
-      } else if (chatInput.includes('보관') || lower.includes('store') || lower.includes('storage') || lower.includes('keep')) {
+      } else if (chatInput.includes('보관') || lower.includes('store') || lower.includes('storage') || lower.includes('keep') || lower.includes('conserver') || lower.includes('stockage') || lower.includes('garde')) {
         aiResponseKey = "storageResponse";
       }
       
@@ -55,30 +55,6 @@ const VetacolLanding = () => {
   return (
     <div className="min-h-screen font-sans text-gray-800 bg-slate-50 selection:bg-[#00513b] selection:text-white relative">
       
-      {/* 0. 고정 플로팅 언어 토글 버튼 (KR / EN) */}
-      <div className="fixed top-3 right-3 sm:top-4 sm:right-6 z-[70] flex items-center bg-slate-900/90 backdrop-blur-md border border-emerald-500/40 p-1 rounded-full shadow-2xl animate-fade-in ring-2 ring-white/10">
-        <button
-          onClick={() => setLang('ko')}
-          className={`px-3 py-1.5 rounded-full text-xs font-extrabold transition-all duration-300 flex items-center gap-1.5 ${
-            lang === 'ko'
-              ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-lg scale-105'
-              : 'text-gray-300 hover:text-white'
-          }`}
-        >
-          <span>🇰🇷</span> 한국어
-        </button>
-        <button
-          onClick={() => setLang('en')}
-          className={`px-3 py-1.5 rounded-full text-xs font-extrabold transition-all duration-300 flex items-center gap-1.5 ${
-            lang === 'en'
-              ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-lg scale-105'
-              : 'text-gray-300 hover:text-white'
-          }`}
-        >
-          <span>🇺🇸</span> English
-        </button>
-      </div>
-
       {/* 1. 최상단 신뢰도 배너 */}
       <div className="bg-[#002b1f] text-emerald-300 text-xs sm:text-sm py-2.5 px-4 text-center font-medium tracking-wide border-b border-emerald-800/40">
         <span className="inline-flex items-center justify-center gap-1.5">
@@ -87,11 +63,47 @@ const VetacolLanding = () => {
         </span>
       </div>
 
-      {/* 2. 히어로 헤더 */}
-      <header className="relative bg-gradient-to-br from-[#00513b] via-[#00664a] to-[#003828] text-white pt-20 pb-24 px-6 overflow-hidden shadow-xl">
+      {/* 2. 히어로 헤더 (상하폭 확대 pt-24 pb-32 sm:pt-28 sm:pb-36) */}
+      <header className="relative bg-gradient-to-br from-[#00513b] via-[#00664a] to-[#003828] text-white pt-24 pb-32 sm:pt-28 sm:pb-36 px-6 overflow-hidden shadow-xl">
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-r from-emerald-400/10 via-teal-300/10 to-transparent rounded-full blur-3xl pointer-events-none" />
         
         <div className="max-w-4xl mx-auto text-center relative z-10 space-y-4">
+          {/* 언어 토글 버튼 (헤더 내부 상단 배치, Clean text without US/emoji flag rendering issues) */}
+          <div className="flex justify-center sm:justify-end mb-6 sm:mb-8">
+            <div className="inline-flex items-center bg-black/30 backdrop-blur-md border border-white/20 p-1 rounded-full shadow-lg">
+              <button
+                onClick={() => setLang('ko')}
+                className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+                  lang === 'ko'
+                    ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
+                    : 'text-emerald-100/70 hover:text-white'
+                }`}
+              >
+                한국어
+              </button>
+              <button
+                onClick={() => setLang('en')}
+                className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+                  lang === 'en'
+                    ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
+                    : 'text-emerald-100/70 hover:text-white'
+                }`}
+              >
+                English
+              </button>
+              <button
+                onClick={() => setLang('fr')}
+                className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+                  lang === 'fr'
+                    ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
+                    : 'text-emerald-100/70 hover:text-white'
+                }`}
+              >
+                Français
+              </button>
+            </div>
+          </div>
+
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-xs sm:text-sm font-semibold tracking-wide border border-white/20 shadow-inner">
             <span>{t.hero.badge}</span>
           </div>
