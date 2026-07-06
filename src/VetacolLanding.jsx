@@ -104,31 +104,61 @@ const VetacolLanding = () => {
             </div>
           </div>
 
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-xs sm:text-sm font-semibold tracking-wide border border-white/20 shadow-inner">
+          {/* 1. 타겟 배지 (한우/젖소 송아지 및 어린 반추가축 안내) */}
+          <div className="flex flex-col items-center gap-1.5 pt-2">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500/25 via-yellow-500/25 to-amber-500/25 backdrop-blur-md rounded-full text-xs sm:text-base font-extrabold tracking-wide border border-amber-400/50 shadow-lg text-amber-200">
+              <span>{t.hero.targetBadge}</span>
+            </div>
+            <p className="text-[11px] sm:text-xs text-emerald-200/90 font-medium tracking-tight text-center max-w-xl break-keep">
+              {t.hero.ruminantNote}
+            </p>
+          </div>
+
+          {/* 2. 유럽 선택 초유 영양제 배지 */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-xs sm:text-sm font-semibold tracking-wide border border-white/20 shadow-inner mt-2">
             <span>{t.hero.badge}</span>
           </div>
           
-          <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-white drop-shadow-md leading-tight">
+          {/* 3. 명확한 5초 인지 메인 타이틀 (초유 전면 강조 & 모바일 고대비 가독성) */}
+          <h1 className="text-3xl sm:text-6xl font-black tracking-tight text-white drop-shadow-lg leading-tight break-keep pt-2">
             {t.hero.title1} <br className="sm:hidden" />
-            <span className="text-emerald-300">{t.hero.title2}</span>{' '}
-            <span className="text-2xl sm:text-4xl font-light text-emerald-100/90">{t.hero.title3}</span>
+            <span className="text-amber-300 font-extrabold drop-shadow-md">{t.hero.title2}</span>{' '}
+            <span className="text-2xl sm:text-4xl font-black text-emerald-100">{t.hero.title3}</span>
           </h1>
           
-          <p className="text-lg sm:text-2xl text-emerald-100 font-medium max-w-2xl mx-auto pt-2 leading-relaxed break-keep">
-            {t.hero.subtitle1} <strong className="text-white underline decoration-emerald-400 decoration-4 underline-offset-4">{t.hero.subtitleHighlight}</strong>{t.hero.subtitle2} 
+          <p className="text-base sm:text-2xl text-white/95 font-medium max-w-2xl mx-auto pt-3 leading-relaxed break-keep drop-shadow">
+            {t.hero.subtitle1} <strong className="text-amber-300 font-bold underline decoration-amber-400 decoration-3 underline-offset-4">{t.hero.subtitleHighlight}</strong>{t.hero.subtitle2} 
             <br className="hidden sm:inline" /> {t.hero.subtitle3}
           </p>
 
-          {/* 간편 요약 배지 */}
-          <div className="flex flex-wrap justify-center gap-3 pt-6 text-xs sm:text-sm font-semibold">
-            <div className="bg-black/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/15 flex items-center gap-2">
-              <span>💉</span> {t.hero.badge1}
+          {/* 4. 프랑스 VETALIS 공식 신뢰 보증 박스 (Why Vetacol? - 첫 화면 직관적 보증 및 URL 노출) */}
+          <div className="max-w-xl mx-auto mt-6 p-4 rounded-2xl bg-black/40 backdrop-blur-md border border-emerald-400/40 shadow-2xl text-left sm:text-center space-y-1.5 transition-all hover:border-emerald-400/70">
+            <div className="flex flex-wrap items-center justify-center gap-2 text-xs sm:text-sm font-bold text-white">
+              <span>{t.hero.trustTitle}</span>
+              <a 
+                href="https://www.vetalis.fr" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-emerald-300 hover:text-amber-300 underline underline-offset-2 transition-colors font-semibold"
+              >
+                {t.hero.trustUrlText} <span className="text-[10px]">↗</span>
+              </a>
             </div>
-            <div className="bg-black/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/15 flex items-center gap-2">
-              <span>⚡</span> {t.hero.badge2}
+            <p className="text-[11px] sm:text-xs text-emerald-200/90 leading-normal break-keep">
+              {t.hero.trustSub}
+            </p>
+          </div>
+
+          {/* 5. 간편 요약 배지 (모바일 1열 카드/2열 그리드 최적화로 가독성 극대화) */}
+          <div className="grid grid-cols-1 sm:flex sm:flex-wrap justify-center gap-2.5 sm:gap-3 pt-6 text-xs sm:text-sm font-semibold max-w-md sm:max-w-none mx-auto">
+            <div className="bg-black/30 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-white/20 flex items-center justify-center sm:justify-start gap-2 text-white shadow-sm">
+              <span className="text-base">💉</span> <span>{t.hero.badge1}</span>
             </div>
-            <div className="bg-black/20 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/15 flex items-center gap-2">
-              <span>🏆</span> {t.hero.badge3}
+            <div className="bg-black/30 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-white/20 flex items-center justify-center sm:justify-start gap-2 text-white shadow-sm">
+              <span className="text-base">⚡</span> <span>{t.hero.badge2}</span>
+            </div>
+            <div className="bg-black/30 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-white/20 flex items-center justify-center sm:justify-start gap-2 text-white shadow-sm">
+              <span className="text-base">🏆</span> <span>{t.hero.badge3}</span>
             </div>
           </div>
 
