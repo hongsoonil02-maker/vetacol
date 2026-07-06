@@ -63,47 +63,70 @@ const VetacolLanding = () => {
         </span>
       </div>
 
-      {/* 2. 히어로 헤더 (상하폭 확대 pt-24 pb-32 sm:pt-28 sm:pb-36) */}
-      <header className="relative bg-gradient-to-br from-[#00513b] via-[#00664a] to-[#003828] text-white pt-24 pb-32 sm:pt-28 sm:pb-36 px-6 overflow-hidden shadow-xl">
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-r from-emerald-400/10 via-teal-300/10 to-transparent rounded-full blur-3xl pointer-events-none" />
-        
-        <div className="max-w-4xl mx-auto text-center relative z-10 space-y-4">
-          {/* 언어 토글 버튼 (헤더 내부 상단 배치, Clean text without US/emoji flag rendering issues) */}
-          <div className="flex justify-center sm:justify-end mb-6 sm:mb-8">
-            <div className="inline-flex items-center bg-black/30 backdrop-blur-md border border-white/20 p-1 rounded-full shadow-lg">
-              <button
-                onClick={() => setLang('ko')}
-                className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 ${
-                  lang === 'ko'
-                    ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
-                    : 'text-emerald-100/70 hover:text-white'
-                }`}
-              >
-                한국어
-              </button>
-              <button
-                onClick={() => setLang('en')}
-                className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 ${
-                  lang === 'en'
-                    ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
-                    : 'text-emerald-100/70 hover:text-white'
-                }`}
-              >
-                English
-              </button>
-              <button
-                onClick={() => setLang('fr')}
-                className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 ${
-                  lang === 'fr'
-                    ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
-                    : 'text-emerald-100/70 hover:text-white'
-                }`}
-              >
-                Français
-              </button>
+      {/* 2. 로타갈(Rotagal) 스타일 상단 내비게이션 헤더 바 (제품명 + 외국어 토글) */}
+      <nav className="sticky top-0 z-50 bg-[#00513b]/95 backdrop-blur-md border-b border-white/15 px-4 sm:px-8 py-3 shadow-lg transition-all">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-3">
+          {/* 좌측: 로고 및 제품명 (Rotagal 스타일 브랜딩) */}
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md border border-yellow-200">
+              <span className="text-lg sm:text-2xl">🐮</span>
+            </div>
+            <div className="flex flex-col text-left">
+              <div className="flex items-center gap-1.5">
+                <span className="text-lg sm:text-2xl font-black tracking-tight text-white drop-shadow">
+                  VETACOL
+                </span>
+                <span className="px-1.5 py-0.5 text-[9px] sm:text-xs font-extrabold bg-amber-400/20 text-amber-300 border border-amber-400/30 rounded">
+                  {lang === 'ko' ? '베타콜' : 'Colostrum'}
+                </span>
+              </div>
+              <span className="text-[9px] sm:text-xs font-semibold text-emerald-200/80 tracking-wide">
+                VETALIS France × Agrokorea
+              </span>
             </div>
           </div>
 
+          {/* 우측: 외국어 토글 스위치 (헤더 내부에 세련되게 통합) */}
+          <div className="inline-flex items-center bg-black/35 backdrop-blur-md border border-white/20 p-1 rounded-full shadow-inner">
+            <button
+              onClick={() => setLang('ko')}
+              className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+                lang === 'ko'
+                  ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
+                  : 'text-emerald-100/70 hover:text-white'
+              }`}
+            >
+              한국어
+            </button>
+            <button
+              onClick={() => setLang('en')}
+              className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+                lang === 'en'
+                  ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
+                  : 'text-emerald-100/70 hover:text-white'
+              }`}
+            >
+              English
+            </button>
+            <button
+              onClick={() => setLang('fr')}
+              className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+                lang === 'fr'
+                  ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
+                  : 'text-emerald-100/70 hover:text-white'
+              }`}
+            >
+              Français
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* 3. 히어로 섹션 (상단 여백 pt-24 -> pt-8 sm:pt-12로 대폭 최적화하여 공백 제거) */}
+      <header className="relative bg-gradient-to-br from-[#00513b] via-[#00664a] to-[#003828] text-white pt-8 pb-16 sm:pt-12 sm:pb-24 px-6 overflow-hidden shadow-xl">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-80 bg-gradient-to-r from-emerald-400/10 via-teal-300/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+        
+        <div className="max-w-4xl mx-auto text-center relative z-10 space-y-4">
           {/* 1. 타겟 배지 (한우/젖소 송아지 및 어린 반추가축 안내) */}
           <div className="flex flex-col items-center gap-1.5 pt-2">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500/25 via-yellow-500/25 to-amber-500/25 backdrop-blur-md rounded-full text-xs sm:text-base font-extrabold tracking-wide border border-amber-400/50 shadow-lg text-amber-200">
