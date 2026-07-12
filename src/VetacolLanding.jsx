@@ -1,25 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Globe } from 'lucide-react';
 import { translations } from './translations';
 
 const VetacolLanding = () => {
   const [lang, setLang] = useState('ko');
   const t = translations[lang];
-  
+
   const [activeTab, setActiveTab] = useState('all');
-  
+
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
     { role: 'ai', key: 'initialMsg' }
   ]);
   const [chatInput, setChatInput] = useState('');
+  const chatMessagesEndRef = useRef(null);
+
+  useEffect(() => {
+    chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatMessages]);
 
   const handleChatSubmit = (e) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
-    
+
     setChatMessages([...chatMessages, { role: 'user', content: chatInput }]);
-    
+
     // Mock AI response
     setTimeout(() => {
       let aiResponseKey = "defaultResponse";
@@ -31,30 +36,36 @@ const VetacolLanding = () => {
       } else if (chatInput.includes('보관') || lower.includes('store') || lower.includes('storage') || lower.includes('keep') || lower.includes('conserver') || lower.includes('stockage') || lower.includes('garde')) {
         aiResponseKey = "storageResponse";
       }
-      
+
       setChatMessages(prev => [...prev, { role: 'ai', key: aiResponseKey }]);
     }, 1000);
-    
+
     setChatInput('');
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleChatSubmit(e);
+    }
   };
 
   const handleQuickReply = (questionKey) => {
     const questionText = t.chatbot[questionKey];
     setChatMessages([...chatMessages, { role: 'user', content: questionText }]);
-    
+
     setTimeout(() => {
       let aiResponseKey = "defaultResponse";
       if (questionKey === 'quick1') aiResponseKey = "benefitsResponse";
       else if (questionKey === 'quick2') aiResponseKey = "dosageResponse";
       else if (questionKey === 'quick3') aiResponseKey = "storageResponse";
-      
+
       setChatMessages(prev => [...prev, { role: 'ai', key: aiResponseKey }]);
     }, 1000);
   };
 
   return (
     <div className="min-h-screen font-sans text-gray-800 bg-slate-50 selection:bg-[#00513b] selection:text-white relative break-keep">
-      
+
       {/* 1. 최상단 신뢰도 배너 (모바일 줄바꿈 및 아이콘 찌그러짐 방지 최적화) */}
       <div className="bg-[#002b1f] text-emerald-300 text-xs sm:text-sm py-2 sm:py-2.5 px-3 sm:px-4 text-center font-medium tracking-wide border-b border-emerald-800/40">
         <div className="flex items-center justify-center gap-1.5 max-w-5xl mx-auto">
@@ -90,31 +101,28 @@ const VetacolLanding = () => {
           <div className="inline-flex items-center bg-black/35 backdrop-blur-md border border-white/20 p-0.5 sm:p-1 rounded-full shadow-inner shrink-0">
             <button
               onClick={() => setLang('ko')}
-              className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-sm font-extrabold tracking-tight sm:tracking-normal transition-all duration-300 ${
-                lang === 'ko'
-                  ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
-                  : 'text-emerald-100/70 hover:text-white'
-              }`}
+              className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-sm font-extrabold tracking-tight sm:tracking-normal transition-all duration-300 ${lang === 'ko'
+                ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
+                : 'text-emerald-100/70 hover:text-white'
+                }`}
             >
               한국어
             </button>
             <button
               onClick={() => setLang('en')}
-              className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-sm font-extrabold tracking-tight sm:tracking-normal transition-all duration-300 ${
-                lang === 'en'
-                  ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
-                  : 'text-emerald-100/70 hover:text-white'
-              }`}
+              className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-sm font-extrabold tracking-tight sm:tracking-normal transition-all duration-300 ${lang === 'en'
+                ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
+                : 'text-emerald-100/70 hover:text-white'
+                }`}
             >
               English
             </button>
             <button
               onClick={() => setLang('fr')}
-              className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-sm font-extrabold tracking-tight sm:tracking-normal transition-all duration-300 ${
-                lang === 'fr'
-                  ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
-                  : 'text-emerald-100/70 hover:text-white'
-              }`}
+              className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-sm font-extrabold tracking-tight sm:tracking-normal transition-all duration-300 ${lang === 'fr'
+                ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
+                : 'text-emerald-100/70 hover:text-white'
+                }`}
             >
               Français
             </button>
@@ -125,7 +133,7 @@ const VetacolLanding = () => {
       {/* 3. 히어로 섹션 (상단 여백 pt-24 -> pt-8 sm:pt-12로 대폭 최적화하여 공백 제거) */}
       <header className="relative bg-gradient-to-br from-[#00513b] via-[#00664a] to-[#003828] text-white pt-8 pb-16 sm:pt-12 sm:pb-24 px-6 overflow-hidden shadow-xl">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-80 bg-gradient-to-r from-emerald-400/10 via-teal-300/10 to-transparent rounded-full blur-3xl pointer-events-none" />
-        
+
         <div className="max-w-4xl mx-auto text-center relative z-10 space-y-4">
           {/* 1. 타겟 배지 (한우/젖소 송아지 및 어린 반추가축 안내) */}
           <div className="flex flex-col items-center gap-1.5 pt-2">
@@ -141,16 +149,16 @@ const VetacolLanding = () => {
           <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 backdrop-blur-md rounded-full text-xs sm:text-sm font-semibold tracking-wide border border-white/20 shadow-inner mt-2">
             <span>{t.hero.badge}</span>
           </div>
-          
+
           {/* 3. 명확한 5초 인지 메인 타이틀 (초유 전면 강조 & 모바일 고대비 가독성) */}
           <h1 className="text-3xl sm:text-6xl font-black tracking-tight text-white drop-shadow-lg leading-tight break-keep pt-2">
             {t.hero.title1} <br className="sm:hidden" />
             <span className="text-amber-300 font-extrabold drop-shadow-md">{t.hero.title2}</span>{' '}
             <span className="text-2xl sm:text-4xl font-black text-emerald-100">{t.hero.title3}</span>
           </h1>
-          
+
           <p className="text-base sm:text-2xl text-white/95 font-medium max-w-2xl mx-auto pt-3 leading-relaxed break-keep drop-shadow">
-            {t.hero.subtitle1} <strong className="text-amber-300 font-bold underline decoration-amber-400 decoration-3 underline-offset-4">{t.hero.subtitleHighlight}</strong>{t.hero.subtitle2} 
+            {t.hero.subtitle1} <strong className="text-amber-300 font-bold underline decoration-amber-400 decoration-3 underline-offset-4">{t.hero.subtitleHighlight}</strong>{t.hero.subtitle2}
             <br className="hidden sm:inline" /> {t.hero.subtitle3}
           </p>
 
@@ -158,9 +166,9 @@ const VetacolLanding = () => {
           <div className="max-w-xl mx-auto mt-6 p-4 rounded-2xl bg-black/40 backdrop-blur-md border border-emerald-400/40 shadow-2xl text-left sm:text-center space-y-1.5 transition-all hover:border-emerald-400/70">
             <div className="flex flex-wrap items-center justify-center gap-2 text-xs sm:text-sm font-bold text-white">
               <span>{t.hero.trustTitle}</span>
-              <a 
-                href="https://www.vetalis.fr" 
-                target="_blank" 
+              <a
+                href="https://www.vetalis.fr"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-emerald-300 hover:text-amber-300 underline underline-offset-2 transition-colors font-semibold"
               >
@@ -206,7 +214,7 @@ const VetacolLanding = () => {
 
       {/* 헤더 침범(-mt-12) 제거 및 간격 조정(py-12) */}
       <main className="max-w-5xl mx-auto px-4 py-12 relative z-20 space-y-16 pb-32">
-        
+
         {/* 3. 4대 특장점 (Why Vetacol?) */}
         <section className="bg-white p-6 sm:p-10 rounded-3xl shadow-xl border border-gray-100">
           <div className="text-center max-w-2xl mx-auto mb-8">
@@ -231,7 +239,7 @@ const VetacolLanding = () => {
         {/* 3.5. 공식 해설 동영상 (비디오 플레이어) */}
         <section className="bg-gradient-to-br from-slate-900 via-[#003828] to-slate-900 text-white p-6 sm:p-10 rounded-3xl shadow-2xl border border-emerald-500/30 relative overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
-          
+
           <div className="text-center max-w-2xl mx-auto mb-8 relative z-10">
             <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-semibold uppercase tracking-wider">
               {t.video.badge}
@@ -319,7 +327,7 @@ const VetacolLanding = () => {
         {/* 5. 5대 핵심 성분 & 포뮬러 (인터랙티브 그리드) */}
         <section className="bg-slate-900 text-white p-8 sm:p-12 rounded-3xl shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-          
+
           <div className="max-w-3xl mx-auto text-center mb-10 relative z-10">
             <span className="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-semibold uppercase tracking-wider">
               {t.ingredientsSection.badge}
@@ -348,7 +356,7 @@ const VetacolLanding = () => {
                 </div>
               </div>
             ))}
-            
+
             {/* 6번째 카드: 기호성 및 제조기술 약속 */}
             <div className="bg-gradient-to-br from-[#00513b] to-emerald-800 p-6 rounded-2xl border border-emerald-600/50 flex flex-col justify-center text-center items-center shadow-lg">
               <div className="text-3xl mb-2">🇫🇷</div>
@@ -532,7 +540,7 @@ const VetacolLanding = () => {
       {/* AI Chatbot Floating Action Button & Window */}
       <div className="fixed bottom-28 right-6 sm:bottom-8 sm:right-8 z-[60] flex flex-col items-end">
         {isChatOpen ? (
-          <div className="bg-white w-[320px] sm:w-[400px] h-[480px] sm:h-[550px] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4">
+          <div className="bg-white w-[320px] sm:w-[400px] h-[480px] sm:h-[550px] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4" role="dialog" aria-label="베타콜 수의사 AI 채팅">
             <div className="bg-[#00513b] p-3 sm:p-4 flex justify-between items-center text-white">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -543,49 +551,56 @@ const VetacolLanding = () => {
                   <p className="text-[10px] sm:text-xs text-emerald-200">{t.chatbot.status}</p>
                 </div>
               </div>
-              <button onClick={() => setIsChatOpen(false)} className="text-emerald-100 hover:text-white transition-colors">
+              <button onClick={() => setIsChatOpen(false)} className="text-emerald-100 hover:text-white transition-colors" aria-label="채팅 닫기">
                 <X className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
             </div>
-            
-            <div className="flex-1 p-3 sm:p-4 overflow-y-auto bg-gray-50 flex flex-col gap-3 sm:gap-4">
+
+            <div className="flex-1 p-3 sm:p-4 overflow-y-auto bg-gray-50 flex flex-col gap-3 sm:gap-4" role="log" aria-live="polite">
               {chatMessages.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[85%] p-2.5 sm:p-3 rounded-2xl text-xs sm:text-sm leading-relaxed break-keep ${
-                    msg.role === 'user' 
-                      ? 'bg-[#00513b] text-white rounded-tr-sm' 
-                      : 'bg-white border border-gray-200 text-gray-800 rounded-tl-sm shadow-sm'
-                  }`}>
+                  <div className={`max-w-[85%] p-2.5 sm:p-3 rounded-2xl text-xs sm:text-sm leading-relaxed break-keep ${msg.role === 'user'
+                    ? 'bg-[#00513b] text-white rounded-tr-sm'
+                    : 'bg-white border border-gray-200 text-gray-800 rounded-tl-sm shadow-sm'
+                    }`}>
                     {msg.key ? t.chatbot[msg.key] : msg.content}
                   </div>
                 </div>
               ))}
-              
+
               {/* Quick Replies */}
-              <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2 sm:mt-4">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2 sm:mt-4" role="group" aria-label="빠른 질문">
                 <button onClick={() => handleQuickReply('quick1')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">{t.chatbot.quick1Label}</button>
                 <button onClick={() => handleQuickReply('quick2')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">{t.chatbot.quick2Label}</button>
                 <button onClick={() => handleQuickReply('quick3')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">{t.chatbot.quick3Label}</button>
               </div>
+              <div ref={chatMessagesEndRef} />
             </div>
-            
+
             <form onSubmit={handleChatSubmit} className="p-3 sm:p-4 bg-white border-t border-gray-100 flex gap-2">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder={t.chatbot.placeholder}
                 className="flex-1 bg-gray-100 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#00513b]"
+                aria-label={t.chatbot.placeholder}
               />
-              <button type="submit" className="w-8 h-8 sm:w-10 sm:h-10 bg-[#00513b] text-white rounded-full flex items-center justify-center hover:bg-[#003828] transition-colors shrink-0 shadow-md">
+              <button
+                type="submit"
+                className="w-8 h-8 sm:w-10 sm:h-10 bg-[#00513b] text-white rounded-full flex items-center justify-center hover:bg-[#003828] transition-colors shrink-0 shadow-md"
+                aria-label="메시지 전송"
+              >
                 <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-0.5 sm:ml-1" />
               </button>
             </form>
           </div>
         ) : (
-          <button 
+          <button
             onClick={() => setIsChatOpen(true)}
             className="w-16 h-16 sm:w-20 sm:h-20 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-110 hover:-translate-y-2 animate-bounce ring-4 ring-white/30"
+            aria-label="수의사 AI 채팅 열기"
           >
             <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10" />
           </button>
