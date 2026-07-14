@@ -10,7 +10,7 @@ const VetacolLanding = () => {
 
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
-    { role: 'ai', key: 'initialMsg' }
+    { id: 'init', role: 'ai', key: 'initialMsg' }
   ]);
   const [chatInput, setChatInput] = useState('');
   const chatMessagesEndRef = useRef(null);
@@ -23,7 +23,7 @@ const VetacolLanding = () => {
     e.preventDefault();
     if (!chatInput.trim()) return;
 
-    setChatMessages([...chatMessages, { role: 'user', content: chatInput }]);
+    setChatMessages([...chatMessages, { id: Date.now().toString(), role: 'user', content: chatInput }]);
 
     // Mock AI response
     setTimeout(() => {
@@ -37,7 +37,7 @@ const VetacolLanding = () => {
         aiResponseKey = "storageResponse";
       }
 
-      setChatMessages(prev => [...prev, { role: 'ai', key: aiResponseKey }]);
+      setChatMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'ai', key: aiResponseKey }]);
     }, 1000);
 
     setChatInput('');
@@ -51,7 +51,7 @@ const VetacolLanding = () => {
 
   const handleQuickReply = (questionKey) => {
     const questionText = t.chatbot[questionKey];
-    setChatMessages([...chatMessages, { role: 'user', content: questionText }]);
+    setChatMessages([...chatMessages, { id: Date.now().toString(), role: 'user', content: questionText }]);
 
     setTimeout(() => {
       let aiResponseKey = "defaultResponse";
@@ -59,7 +59,7 @@ const VetacolLanding = () => {
       else if (questionKey === 'quick2') aiResponseKey = "dosageResponse";
       else if (questionKey === 'quick3') aiResponseKey = "storageResponse";
 
-      setChatMessages(prev => [...prev, { role: 'ai', key: aiResponseKey }]);
+      setChatMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'ai', key: aiResponseKey }]);
     }, 1000);
   };
 
@@ -259,6 +259,7 @@ const VetacolLanding = () => {
               controls
               preload="metadata"
               playsInline
+              poster="./og_image.png"
             >
               <source src="./vetacol_video3.mp4" type="video/mp4" />
               {t.video.noSupport}
@@ -540,7 +541,7 @@ const VetacolLanding = () => {
       {/* AI Chatbot Floating Action Button & Window */}
       <div className="fixed bottom-28 right-6 sm:bottom-8 sm:right-8 z-[60] flex flex-col items-end">
         {isChatOpen ? (
-          <div className="bg-white w-[320px] sm:w-[400px] h-[480px] sm:h-[550px] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4" role="dialog" aria-label="베타콜 수의사 AI 채팅">
+          <div className="bg-white w-[320px] sm:w-[400px] h-[450px] sm:h-[550px] max-h-[80vh] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4" role="dialog" aria-label="베타콜 수의사 AI 채팅">
             <div className="bg-[#00513b] p-3 sm:p-4 flex justify-between items-center text-white">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -557,8 +558,8 @@ const VetacolLanding = () => {
             </div>
 
             <div className="flex-1 p-3 sm:p-4 overflow-y-auto bg-gray-50 flex flex-col gap-3 sm:gap-4" role="log" aria-live="polite">
-              {chatMessages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              {chatMessages.map((msg) => (
+                <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[85%] p-2.5 sm:p-3 rounded-2xl text-xs sm:text-sm leading-relaxed break-keep ${msg.role === 'user'
                     ? 'bg-[#00513b] text-white rounded-tr-sm'
                     : 'bg-white border border-gray-200 text-gray-800 rounded-tl-sm shadow-sm'
