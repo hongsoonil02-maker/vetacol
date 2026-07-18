@@ -1,12 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Globe } from 'lucide-react';
+import { MessageCircle, X, Send } from 'lucide-react';
 import { translations } from './translations';
 
 const VetacolLanding = () => {
   const [lang, setLang] = useState('ko');
   const t = translations[lang];
-
-  const [activeTab, setActiveTab] = useState('all');
 
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
