@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Globe } from 'lucide-react';
 import { translations } from './translations';
+import { COUPANG_URL, VETALIS_URL, AGROKOREA_URL, CONTACT } from './constants';
+import { OPENAI_API_KEY, OPENAI_API_URL } from './config';
 
 const VetacolLanding = () => {
   const [lang, setLang] = useState('ko');
@@ -10,7 +12,7 @@ const VetacolLanding = () => {
 
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
-    { id: 'init', role: 'ai', key: 'initialMsg' }
+    { id: 'init', role: 'ai', content: '안녕하세요! 베타콜 전문 수의사 AI 상담사입니다. 송아지 설사병 예방이나 베타콜 급여에 대해 궁금한 점이 있으신가요?' }
   ]);
   const [chatInput, setChatInput] = useState('');
   const chatMessagesEndRef = useRef(null);
@@ -19,28 +21,82 @@ const VetacolLanding = () => {
     chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
-  const handleChatSubmit = (e) => {
+  const callOpenAI = async (userMessage) => {
+    if (!OPENAI_API_KEY) {
+      console.warn('OpenAI API key not configured');
+      return null;
+    }
+
+    try {
+      const response = await fetch(OPENAI_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${OPENAI_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-3.5-turbo',
+          messages: [
+            {
+              role: 'system',
+              content: `You are a professional veterinary AI counselor for Vetacol (VETACOL), a calf colostrum immune nutrition supplement.
+Answer questions about calf diarrhea prevention, Vetacol feeding methods, product storage, and ingredient explanations professionally.
+Provide practical advice based on veterinary evidence. Keep answers concise (2-3 sentences).
+
+CRITICAL - Language matching: You MUST respond in the SAME language as the user's question.
+- 한국어 질문 → 한국어로 답변하세요.
+- English question → Answer in English.
+- Question en français → Répondez en français.
+- Always detect the question's language and reply in that exact language.`
+            },
+            {
+              role: 'user',
+              content: userMessage
+            }
+          ],
+          max_tokens: 300,
+          temperature: 0.7
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.choices[0]?.message?.content || '죄송합니다. 답변을 생성할 수 없습니다.';
+    } catch (error) {
+      console.error('OpenAI API error:', error);
+      return null;
+    }
+  };
+
+  const handleChatSubmit = async (e) => {
     e.preventDefault();
     if (!chatInput.trim()) return;
 
-    setChatMessages([...chatMessages, { id: Date.now().toString(), role: 'user', content: chatInput }]);
-
-    // Mock AI response
-    setTimeout(() => {
-      let aiResponseKey = "defaultResponse";
-      const lower = chatInput.toLowerCase();
-      if (chatInput.includes('급여') || chatInput.includes('언제') || lower.includes('when') || lower.includes('dose') || lower.includes('how') || lower.includes('give') || lower.includes('administer') || lower.includes('quand') || lower.includes('comment') || lower.includes('dose') || lower.includes('administrer')) {
-        aiResponseKey = "dosageResponse";
-      } else if (chatInput.includes('효과') || chatInput.includes('장점') || lower.includes('benefit') || lower.includes('effect') || lower.includes('advantage') || lower.includes('why') || lower.includes('avantage') || lower.includes('effet') || lower.includes('pourquoi')) {
-        aiResponseKey = "benefitsResponse";
-      } else if (chatInput.includes('보관') || lower.includes('store') || lower.includes('storage') || lower.includes('keep') || lower.includes('conserver') || lower.includes('stockage') || lower.includes('garde')) {
-        aiResponseKey = "storageResponse";
-      }
-
-      setChatMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'ai', key: aiResponseKey }]);
-    }, 1000);
-
+    const userMessage = chatInput.trim();
+    setChatMessages([...chatMessages, { id: Date.now().toString(), role: 'user', content: userMessage }]);
     setChatInput('');
+
+    // Show typing indicator
+    const typingId = `typing-${Date.now()}`;
+    setChatMessages(prev => [...prev, { id: typingId, role: 'ai', content: '답변을 생성 중입니다...', isTyping: true }]);
+
+    try {
+      const aiResponse = await callOpenAI(userMessage);
+
+      // Remove typing indicator and add actual response
+      setChatMessages(prev => {
+        const filtered = prev.filter(msg => msg.id !== typingId);
+        return [...filtered, { id: (Date.now() + 1).toString(), role: 'ai', content: aiResponse || '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해 주세요.' }];
+      });
+    } catch (error) {
+      setChatMessages(prev => {
+        const filtered = prev.filter(msg => msg.id !== typingId);
+        return [...filtered, { id: (Date.now() + 1).toString(), role: 'ai', content: '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해 주세요.' }];
+      });
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -49,18 +105,27 @@ const VetacolLanding = () => {
     }
   };
 
-  const handleQuickReply = (questionKey) => {
+  const handleQuickReply = async (questionKey) => {
     const questionText = t.chatbot[questionKey];
     setChatMessages([...chatMessages, { id: Date.now().toString(), role: 'user', content: questionText }]);
 
-    setTimeout(() => {
-      let aiResponseKey = "defaultResponse";
-      if (questionKey === 'quick1') aiResponseKey = "benefitsResponse";
-      else if (questionKey === 'quick2') aiResponseKey = "dosageResponse";
-      else if (questionKey === 'quick3') aiResponseKey = "storageResponse";
+    // Show typing indicator
+    const typingId = `typing-${Date.now()}`;
+    setChatMessages(prev => [...prev, { id: typingId, role: 'ai', content: '답변을 생성 중입니다...', isTyping: true }]);
 
-      setChatMessages(prev => [...prev, { id: (Date.now() + 1).toString(), role: 'ai', key: aiResponseKey }]);
-    }, 1000);
+    try {
+      const aiResponse = await callOpenAI(questionText);
+
+      setChatMessages(prev => {
+        const filtered = prev.filter(msg => msg.id !== typingId);
+        return [...filtered, { id: (Date.now() + 1).toString(), role: 'ai', content: aiResponse || '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해 주세요.' }];
+      });
+    } catch (error) {
+      setChatMessages(prev => {
+        const filtered = prev.filter(msg => msg.id !== typingId);
+        return [...filtered, { id: (Date.now() + 1).toString(), role: 'ai', content: '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해 주세요.' }];
+      });
+    }
   };
 
   return (
@@ -167,7 +232,7 @@ const VetacolLanding = () => {
             <div className="flex flex-wrap items-center justify-center gap-2 text-xs sm:text-sm font-bold text-white">
               <span>{t.hero.trustTitle}</span>
               <a
-                href="https://www.vetalis.fr"
+                href={VETALIS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-emerald-300 hover:text-amber-300 underline underline-offset-2 transition-colors font-semibold"
@@ -196,7 +261,7 @@ const VetacolLanding = () => {
           {/* 쿠팡 즉시 구매 CTA 버튼 (히어로 섹션) */}
           <div className="pt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
             <a
-              href="https://www.coupang.com/vp/products/9428079667?vendorItemId=94985664531&itemId=28028533075&landingType=SDP"
+              href={COUPANG_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-black text-lg sm:text-xl rounded-2xl shadow-xl hover:shadow-amber-500/30 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 group border-2 border-yellow-200 animate-bounce sm:animate-none"
@@ -285,7 +350,7 @@ const VetacolLanding = () => {
           {/* 영상 시청 후 구매 유도 CTA */}
           <div className="mt-8 text-center relative z-10">
             <a
-              href="https://www.coupang.com/vp/products/9428079667?vendorItemId=94985664531&itemId=28028533075&landingType=SDP"
+              href={COUPANG_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-black text-sm sm:text-base rounded-xl shadow-lg hover:shadow-xl transition-all border border-yellow-200"
@@ -421,7 +486,7 @@ const VetacolLanding = () => {
             </div>
             <div className="mt-8 relative z-10">
               <a
-                href="https://www.coupang.com/vp/products/9428079667?vendorItemId=94985664531&itemId=28028533075&landingType=SDP"
+                href={COUPANG_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full py-4 bg-white hover:bg-emerald-50 text-[#00513b] hover:text-emerald-900 rounded-2xl text-base sm:text-lg font-black shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 transform group-hover:translate-y-[-2px] border-2 border-emerald-600/10"
@@ -449,7 +514,7 @@ const VetacolLanding = () => {
 
               {/* 공식 QR 코드 스캔 박스 */}
               <div className="my-3 p-3 sm:p-4 bg-white/95 backdrop-blur-md rounded-2xl flex items-center gap-3.5 border border-emerald-400/40 text-slate-900 shadow-lg">
-                <img src="./vetacol_qr.png" alt="베타콜 공식 QR코드" className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl shrink-0 border border-slate-200 shadow" />
+                <img src="./vetacol_qr.png" alt="베타콜 공식 랜딩페이지 QR코드" className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl shrink-0 border border-slate-200 shadow" />
                 <div className="space-y-1">
                   <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-100 text-[#00513b] text-[11px] font-extrabold">
                     <span>{t.cta.qrBadge}</span>
@@ -464,8 +529,8 @@ const VetacolLanding = () => {
               </div>
 
               <div className="pt-1 flex flex-col gap-1.5 text-xs text-emerald-200">
-                <span className="flex items-center gap-1.5">{t.cta.phone1} <strong className="text-white text-sm">02-6949-5708</strong></span>
-                <span className="flex items-center gap-1.5">{t.cta.phone2} <strong className="text-white text-sm">010-5407-5708</strong></span>
+                <span className="flex items-center gap-1.5">{t.cta.phone1} <strong className="text-white text-sm">{CONTACT.tel}</strong></span>
+                <span className="flex items-center gap-1.5">{t.cta.phone2} <strong className="text-white text-sm">{CONTACT.mobile}</strong></span>
                 <span className="flex items-center gap-1.5">{t.cta.web}</span>
               </div>
             </div>
@@ -477,7 +542,7 @@ const VetacolLanding = () => {
                 {t.cta.footerNote2}
               </div>
               <a
-                href="http://www.agrokorea.kr"
+                href={AGROKOREA_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-5 py-3 bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm rounded-xl shadow transition-colors flex items-center gap-1 shrink-0"
@@ -504,7 +569,7 @@ const VetacolLanding = () => {
           </div>
         </div>
         <a
-          href="https://www.coupang.com/vp/products/9428079667?vendorItemId=94985664531&itemId=28028533075&landingType=SDP"
+          href={COUPANG_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="shrink-0 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-black text-xs sm:text-sm rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-1.5 border border-yellow-200"
@@ -522,7 +587,7 @@ const VetacolLanding = () => {
             <p className="leading-relaxed">
               {t.footer.address}<br />
               {t.footer.tel}<br />
-              {t.footer.web} <a href="http://www.agrokorea.kr" className="text-emerald-400 hover:underline">www.agrokorea.kr</a>
+              {t.footer.web} <a href={AGROKOREA_URL} className="text-emerald-400 hover:underline">www.agrokorea.kr</a>
             </p>
           </div>
           <div className="space-y-1 text-slate-400">
@@ -564,7 +629,7 @@ const VetacolLanding = () => {
                     ? 'bg-[#00513b] text-white rounded-tr-sm'
                     : 'bg-white border border-gray-200 text-gray-800 rounded-tl-sm shadow-sm'
                     }`}>
-                    {msg.key ? t.chatbot[msg.key] : msg.content}
+                    {msg.content}
                   </div>
                 </div>
               ))}
@@ -600,7 +665,7 @@ const VetacolLanding = () => {
         ) : (
           <button
             onClick={() => setIsChatOpen(true)}
-            className="w-16 h-16 sm:w-20 sm:h-20 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-110 hover:-translate-y-2 animate-bounce ring-4 ring-white/30"
+            className="w-16 h-16 sm:w-20 sm:h-20 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-110 hover:-translate-y-2 ring-4 ring-white/30"
             aria-label="수의사 AI 채팅 열기"
           >
             <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10" />
