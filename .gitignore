@@ -29,3 +29,7 @@ dist-ssr
 *.xls
 *.txt
 *.py
+.env*
+src/.env*
+vetacol-landing/
+

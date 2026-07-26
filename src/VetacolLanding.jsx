@@ -3,6 +3,9 @@ import { MessageCircle, X, Send, Globe } from 'lucide-react';
 import { translations } from './translations';
 import { COUPANG_URL, VETALIS_URL, AGROKOREA_URL, CONTACT } from './constants';
 import { OPENAI_API_KEY, OPENAI_API_URL } from './config';
+import GoldenTimeTimer from './components/GoldenTimeTimer';
+import StickyBottomCTA from './components/StickyBottomCTA';
+
 
 const VetacolLanding = () => {
   const [lang, setLang] = useState('ko');
@@ -194,6 +197,12 @@ CRITICAL - Language matching: You MUST respond in the SAME language as the user'
           </div>
         </div>
       </nav>
+
+      {/* 3시간 골든타임 시계 타이머 */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-8">
+        <GoldenTimeTimer />
+      </div>
+
 
       {/* 3. 히어로 섹션 (상단 여백 pt-24 -> pt-8 sm:pt-12로 대폭 최적화하여 공백 제거) */}
       <header className="relative bg-gradient-to-br from-[#00513b] via-[#00664a] to-[#003828] text-white pt-8 pb-16 sm:pt-12 sm:pb-24 px-6 overflow-hidden shadow-xl">
@@ -673,8 +682,11 @@ CRITICAL - Language matching: You MUST respond in the SAME language as the user'
         )}
       </div>
 
+      {/* 모바일 반응형 스티키 CTA 바 */}
+      <StickyBottomCTA />
     </div>
   );
 };
+
 
 export default VetacolLanding;
