@@ -40,7 +40,7 @@ const VetacolLanding = () => {
         const response = await fetch(CHAT_API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: userMessage })
+          body: JSON.stringify({ product: 'vetacol', message: userMessage })
         });
 
         if (!response.ok) {

@@ -1,0 +1,7 @@
+name = "vetacol"
+main = "worker/chat-proxy.js"
+compatibility_date = "2026-08-01"
+
+# 추가 허용 오리진이 있으면 아래 주석 해제 후 입력 (CSV 가능)
+# [vars]
+# ALLOWED_ORIGIN = "https://example.com"
