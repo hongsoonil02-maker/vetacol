@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Globe } from 'lucide-react';
+import { MessageCircle, X, Send } from 'lucide-react';
 import { translations } from './translations';
 import { COUPANG_URL, VETALIS_URL, AGROKOREA_URL, CONTACT } from './constants';
-import { OPENAI_API_KEY, OPENAI_API_URL } from './config';
+import { CHAT_API_URL } from './config';
 import GoldenTimeTimer from './components/GoldenTimeTimer';
 import StickyBottomCTA from './components/StickyBottomCTA';
 
@@ -11,11 +11,9 @@ const VetacolLanding = () => {
   const [lang, setLang] = useState('ko');
   const t = translations[lang];
 
-  const [activeTab, setActiveTab] = useState('all');
-
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
-    { id: 'init', role: 'ai', content: '안녕하세요! 베타콜 전문 수의사 AI 상담사입니다. 송아지 설사병 예방이나 베타콜 급여에 대해 궁금한 점이 있으신가요?' }
+    { id: 'init', role: 'ai', content: t.chatbot.initialMsg }
   ]);
   const [chatInput, setChatInput] = useState('');
   const chatMessagesEndRef = useRef(null);
@@ -24,111 +22,49 @@ const VetacolLanding = () => {
     chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
-  const callOpenAI = async (userMessage) => {
-    if (!OPENAI_API_KEY) {
-      console.warn('OpenAI API key not configured');
-      return null;
-    }
+  const sendMessage = async (text) => {
+    const userMessage = text.trim();
+    if (!userMessage) return;
 
+    setChatMessages(prev => [...prev, { id: Date.now().toString(), role: 'user', content: userMessage }]);
+
+    const typingId = `typing-${Date.now()}`;
+    const errorMsg = t.chatbot.error;
+    setChatMessages(prev => [...prev, { id: typingId, role: 'ai', content: t.chatbot.typing, isTyping: true }]);
+
+    let aiResponse = null;
     try {
-      const response = await fetch(OPENAI_API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${OPENAI_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            {
-              role: 'system',
-              content: `You are a professional veterinary AI counselor for Vetacol (VETACOL), a calf colostrum immune nutrition supplement.
-Answer questions about calf diarrhea prevention, Vetacol feeding methods, product storage, and ingredient explanations professionally.
-Provide practical advice based on veterinary evidence. Keep answers concise (2-3 sentences).
+      if (!CHAT_API_URL) {
+        console.warn('Chat API URL not configured');
+      } else {
+        const response = await fetch(CHAT_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: userMessage })
+        });
 
-CRITICAL - Language matching: You MUST respond in the SAME language as the user's question.
-- 한국어 질문 → 한국어로 답변하세요.
-- English question → Answer in English.
-- Question en français → Répondez en français.
-- Always detect the question's language and reply in that exact language.`
-            },
-            {
-              role: 'user',
-              content: userMessage
-            }
-          ],
-          max_tokens: 300,
-          temperature: 0.7
-        })
-      });
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
 
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
+        const data = await response.json();
+        aiResponse = data.reply || null;
       }
-
-      const data = await response.json();
-      return data.choices[0]?.message?.content || '죄송합니다. 답변을 생성할 수 없습니다.';
-    } catch (error) {
-      console.error('OpenAI API error:', error);
-      return null;
+    } catch {
+      console.error('Chat API error');
+      aiResponse = null;
     }
+
+    setChatMessages(prev => {
+      const filtered = prev.filter(msg => msg.id !== typingId);
+      return [...filtered, { id: `${typingId}-reply`, role: 'ai', content: aiResponse || errorMsg }];
+    });
   };
 
-  const handleChatSubmit = async (e) => {
+  const handleChatSubmit = (e) => {
     e.preventDefault();
-    if (!chatInput.trim()) return;
-
-    const userMessage = chatInput.trim();
-    setChatMessages([...chatMessages, { id: Date.now().toString(), role: 'user', content: userMessage }]);
+    sendMessage(chatInput);
     setChatInput('');
-
-    // Show typing indicator
-    const typingId = `typing-${Date.now()}`;
-    setChatMessages(prev => [...prev, { id: typingId, role: 'ai', content: '답변을 생성 중입니다...', isTyping: true }]);
-
-    try {
-      const aiResponse = await callOpenAI(userMessage);
-
-      // Remove typing indicator and add actual response
-      setChatMessages(prev => {
-        const filtered = prev.filter(msg => msg.id !== typingId);
-        return [...filtered, { id: (Date.now() + 1).toString(), role: 'ai', content: aiResponse || '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해 주세요.' }];
-      });
-    } catch (error) {
-      setChatMessages(prev => {
-        const filtered = prev.filter(msg => msg.id !== typingId);
-        return [...filtered, { id: (Date.now() + 1).toString(), role: 'ai', content: '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해 주세요.' }];
-      });
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleChatSubmit(e);
-    }
-  };
-
-  const handleQuickReply = async (questionKey) => {
-    const questionText = t.chatbot[questionKey];
-    setChatMessages([...chatMessages, { id: Date.now().toString(), role: 'user', content: questionText }]);
-
-    // Show typing indicator
-    const typingId = `typing-${Date.now()}`;
-    setChatMessages(prev => [...prev, { id: typingId, role: 'ai', content: '답변을 생성 중입니다...', isTyping: true }]);
-
-    try {
-      const aiResponse = await callOpenAI(questionText);
-
-      setChatMessages(prev => {
-        const filtered = prev.filter(msg => msg.id !== typingId);
-        return [...filtered, { id: (Date.now() + 1).toString(), role: 'ai', content: aiResponse || '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해 주세요.' }];
-      });
-    } catch (error) {
-      setChatMessages(prev => {
-        const filtered = prev.filter(msg => msg.id !== typingId);
-        return [...filtered, { id: (Date.now() + 1).toString(), role: 'ai', content: '죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해 주세요.' }];
-      });
-    }
   };
 
   return (
@@ -200,8 +136,9 @@ CRITICAL - Language matching: You MUST respond in the SAME language as the user'
 
       {/* 3시간 골든타임 시계 타이머 */}
       <div className="max-w-6xl mx-auto px-4 sm:px-8">
-        <GoldenTimeTimer />
+        <GoldenTimeTimer t={t} />
       </div>
+
 
 
       {/* 3. 히어로 섹션 (상단 여백 pt-24 -> pt-8 sm:pt-12로 대폭 최적화하여 공백 제거) */}
@@ -523,7 +460,7 @@ CRITICAL - Language matching: You MUST respond in the SAME language as the user'
 
               {/* 공식 QR 코드 스캔 박스 */}
               <div className="my-3 p-3 sm:p-4 bg-white/95 backdrop-blur-md rounded-2xl flex items-center gap-3.5 border border-emerald-400/40 text-slate-900 shadow-lg">
-                <img src="./vetacol_qr.png" alt="베타콜 공식 랜딩페이지 QR코드" className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl shrink-0 border border-slate-200 shadow" />
+                <img src="./vetacol_qr.png" alt={t.a11y.qrAlt} className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl shrink-0 border border-slate-200 shadow" />
                 <div className="space-y-1">
                   <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-100 text-[#00513b] text-[11px] font-extrabold">
                     <span>{t.cta.qrBadge}</span>
@@ -565,31 +502,8 @@ CRITICAL - Language matching: You MUST respond in the SAME language as the user'
 
       </main>
 
-      {/* 8. 플로팅 쿠팡 구매 바 (항상 하단 고정) */}
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-2xl bg-slate-900/95 backdrop-blur-md border border-amber-500/50 p-3 sm:p-4 rounded-2xl shadow-2xl flex items-center justify-between gap-3 animate-fade-in">
-        <div className="flex items-center gap-2.5 overflow-hidden">
-          <span className="text-2xl sm:text-3xl shrink-0 animate-bounce">🚀</span>
-          <div className="truncate">
-            <div className="text-[11px] sm:text-xs text-amber-400 font-bold flex items-center gap-1">
-              <span>{t.floatingBar.badge}</span>
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-            </div>
-            <div className="text-xs sm:text-sm font-extrabold text-white truncate">{t.floatingBar.title}</div>
-          </div>
-        </div>
-        <a
-          href={COUPANG_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="shrink-0 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-black text-xs sm:text-sm rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center gap-1.5 border border-yellow-200"
-        >
-          <span>{t.floatingBar.btn}</span>
-          <span>→</span>
-        </a>
-      </div>
-
-      {/* 8. 상세 푸터 (법적 공지 및 판매원 정보) */}
-      <footer className="bg-slate-900 text-slate-400 py-12 px-6 border-t border-slate-800 text-xs">
+      {/* 9. 상세 푸터 (법적 공지 및 판매원 정보, 하단 스티키 바 높이만큼 여백 확보) */}
+      <footer className="bg-slate-900 text-slate-400 pt-12 pb-32 sm:pb-24 px-6 border-t border-slate-800 text-xs">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <div className="space-y-2">
             <h4 className="text-white font-bold text-sm">{t.footer.company}</h4>
@@ -613,9 +527,9 @@ CRITICAL - Language matching: You MUST respond in the SAME language as the user'
       </footer>
 
       {/* AI Chatbot Floating Action Button & Window */}
-      <div className="fixed bottom-28 right-6 sm:bottom-8 sm:right-8 z-[60] flex flex-col items-end">
+      <div className="fixed bottom-24 right-6 sm:bottom-24 sm:right-8 z-[60] flex flex-col items-end">
         {isChatOpen ? (
-          <div className="bg-white w-[320px] sm:w-[400px] h-[450px] sm:h-[550px] max-h-[80vh] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4" role="dialog" aria-label="베타콜 수의사 AI 채팅">
+          <div className="bg-white w-[320px] sm:w-[400px] h-[450px] sm:h-[550px] max-h-[80vh] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4" role="dialog" aria-label={t.a11y.chatDialog}>
             <div className="bg-[#00513b] p-3 sm:p-4 flex justify-between items-center text-white">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -626,7 +540,7 @@ CRITICAL - Language matching: You MUST respond in the SAME language as the user'
                   <p className="text-[10px] sm:text-xs text-emerald-200">{t.chatbot.status}</p>
                 </div>
               </div>
-              <button onClick={() => setIsChatOpen(false)} className="text-emerald-100 hover:text-white transition-colors" aria-label="채팅 닫기">
+              <button onClick={() => setIsChatOpen(false)} className="text-emerald-100 hover:text-white transition-colors" aria-label={t.a11y.chatClose}>
                 <X className="w-5 h-5 sm:w-6 sm:h-6" />
               </button>
             </div>
@@ -644,10 +558,10 @@ CRITICAL - Language matching: You MUST respond in the SAME language as the user'
               ))}
 
               {/* Quick Replies */}
-              <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2 sm:mt-4" role="group" aria-label="빠른 질문">
-                <button onClick={() => handleQuickReply('quick1')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">{t.chatbot.quick1Label}</button>
-                <button onClick={() => handleQuickReply('quick2')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">{t.chatbot.quick2Label}</button>
-                <button onClick={() => handleQuickReply('quick3')} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">{t.chatbot.quick3Label}</button>
+              <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-2 sm:mt-4" role="group" aria-label={t.a11y.quickGroup}>
+                <button onClick={() => sendMessage(t.chatbot.quick1)} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">{t.chatbot.quick1Label}</button>
+                <button onClick={() => sendMessage(t.chatbot.quick2)} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">{t.chatbot.quick2Label}</button>
+                <button onClick={() => sendMessage(t.chatbot.quick3)} className="bg-white border border-[#00513b] text-[#00513b] text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full hover:bg-emerald-50 transition-colors shadow-sm">{t.chatbot.quick3Label}</button>
               </div>
               <div ref={chatMessagesEndRef} />
             </div>
@@ -657,7 +571,6 @@ CRITICAL - Language matching: You MUST respond in the SAME language as the user'
                 type="text"
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                onKeyDown={handleKeyDown}
                 placeholder={t.chatbot.placeholder}
                 className="flex-1 bg-gray-100 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm outline-none focus:ring-2 focus:ring-[#00513b]"
                 aria-label={t.chatbot.placeholder}
@@ -665,7 +578,7 @@ CRITICAL - Language matching: You MUST respond in the SAME language as the user'
               <button
                 type="submit"
                 className="w-8 h-8 sm:w-10 sm:h-10 bg-[#00513b] text-white rounded-full flex items-center justify-center hover:bg-[#003828] transition-colors shrink-0 shadow-md"
-                aria-label="메시지 전송"
+                aria-label={t.a11y.chatSend}
               >
                 <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-0.5 sm:ml-1" />
               </button>
@@ -675,7 +588,7 @@ CRITICAL - Language matching: You MUST respond in the SAME language as the user'
           <button
             onClick={() => setIsChatOpen(true)}
             className="w-16 h-16 sm:w-20 sm:h-20 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-110 hover:-translate-y-2 ring-4 ring-white/30"
-            aria-label="수의사 AI 채팅 열기"
+            aria-label={t.a11y.chatOpen}
           >
             <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10" />
           </button>
@@ -683,10 +596,11 @@ CRITICAL - Language matching: You MUST respond in the SAME language as the user'
       </div>
 
       {/* 모바일 반응형 스티키 CTA 바 */}
-      <StickyBottomCTA />
+      <StickyBottomCTA t={t} />
     </div>
   );
 };
+
 
 
 export default VetacolLanding;

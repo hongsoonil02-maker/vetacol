@@ -1,6 +1,20 @@
 export const translations = {
   ko: {
     banner: "🇫🇷 프랑스 VETALIS 직수입 완제품 | (주)한국아그로 × 고문수의사 제임스 홍 임상 솔루션",
+    goldenTimer: {
+      badge: "🚨 송아지 생존 골든타임",
+      title: "출생 직후 단 3시간! 면역글로불린(IgG) 100% 흡수 골든타임",
+      desc: "베타콜(Vetacol) 15ml 시린지 급여로 초유 미흡 농가의 송아지 폐사율을 제로화하세요.",
+      hours: "시",
+      minutes: "분",
+      seconds: "초"
+    },
+    stickyCta: {
+      title: "베타콜 (Vetacol) 15ml 초유 면역 시린지",
+      sub: "수의사 보증 5대 복합 면역 포뮬러",
+      buyBtn: "🚀 쿠팡 로켓배송 구매",
+      consultBtn: "📞 1:1 수의사 상담"
+    },
     hero: {
       targetBadge: "🐮 대상: 한우 · 젖소 (갓 태어난 송아지 초유 전용)",
       ruminantNote: "※ 🐐 염소, 양 등 다른 어린 반추가축의 초기 기력·면역 증진에도 효과적으로 사용하실 수 있습니다.",
@@ -180,11 +194,6 @@ export const translations = {
       footerNote2: "* 전국 농장 맞춤 컨설팅 지원",
       visitBtn: "웹사이트 방문"
     },
-    floatingBar: {
-      badge: "쿠팡 공식 입점",
-      title: "베타콜 Vetacol 송아지 초유 면역 영양제 15ml",
-      btn: "🛒 쿠팡 구매하기"
-    },
     footer: {
       company: "(주)한국아그로 | 고문수의사 제임스 홍",
       address: "서울특별시 마포구 큰우물로 75 성지빌딩 1506호",
@@ -217,11 +226,35 @@ export const translations = {
       quick2Label: "언제 급여하나요?",
       quick3: "제품 보관 방법은요?",
       quick3Label: "보관방법?",
-      placeholder: "궁금한 점을 질문해보세요..."
+      placeholder: "궁금한 점을 질문해보세요...",
+      typing: "답변을 생성 중입니다...",
+      error: "죄송합니다. 일시적인 오류가 발생했습니다. 다시 시도해 주세요."
+    },
+    a11y: {
+      chatDialog: "베타콜 수의사 AI 상담 채팅창",
+      chatClose: "채팅 닫기",
+      chatOpen: "수의사 AI 채팅 열기",
+      chatSend: "메시지 전송",
+      quickGroup: "빠른 질문",
+      qrAlt: "베타콜 공식 랜딩페이지 QR코드"
     }
   },
   en: {
     banner: "🇫🇷 Direct Import from VETALIS France | Agrokorea Co., Ltd. × Dr. James Hong Clinical Solution",
+    goldenTimer: {
+      badge: "🚨 Calf Survival Golden Time",
+      title: "First 3 Hours After Birth! 100% IgG Absorption Golden Time",
+      desc: "Zero-out calf mortality in colostrum-deficient farms with Vetacol 15ml syringe.",
+      hours: "HR",
+      minutes: "MIN",
+      seconds: "SEC"
+    },
+    stickyCta: {
+      title: "VETACOL 15ml Colostrum Immune Syringe",
+      sub: "Veterinary-Certified 5-in-1 Complex Formula",
+      buyBtn: "🚀 Buy on Coupang Rocket",
+      consultBtn: "📞 1:1 Vet Consultation"
+    },
     hero: {
       targetBadge: "🐮 Target: Calves (Hanwoo · Dairy) | 15ml Colostrum Booster",
       ruminantNote: "※ 🐐 Also highly effective for initial vitality and immunity in other young ruminants such as goats and sheep.",
@@ -401,11 +434,6 @@ export const translations = {
       footerNote2: "* Nationwide Farm Consulting Supported",
       visitBtn: "Visit Website"
     },
-    floatingBar: {
-      badge: "Coupang Official",
-      title: "Vetacol Calf Colostrum Immune Supplement 15ml",
-      btn: "🛒 Buy on Coupang"
-    },
     footer: {
       company: "Agrokorea Co., Ltd. | Advisor Dr. James Hong",
       address: "Room 1506, Seongji Bldg, 75 Keunuemul-ro, Mapo-gu, Seoul, Republic of Korea",
@@ -438,11 +466,35 @@ export const translations = {
       quick2Label: "When to give?",
       quick3: "How to store the product?",
       quick3Label: "Storage info?",
-      placeholder: "Ask any questions here..."
+      placeholder: "Ask any questions here...",
+      typing: "Generating an answer...",
+      error: "Sorry, a temporary error occurred. Please try again."
+    },
+    a11y: {
+      chatDialog: "VETACOL veterinary AI chat window",
+      chatClose: "Close chat",
+      chatOpen: "Open veterinary AI chat",
+      chatSend: "Send message",
+      quickGroup: "Quick questions",
+      qrAlt: "VETACOL official landing page QR code"
     }
   },
   fr: {
     banner: "🇫🇷 Importé directement de VETALIS France | Solution clinique Agrokorea Co., Ltd. × Dr. James Hong",
+    goldenTimer: {
+      badge: "🚨 Heure d'Or de Survie du Veau",
+      title: "Seulement 3 Heures Après la Naissance ! Absorption 100% IgG",
+      desc: "Réduisez à zéro la mortalité des veaux carencés en colostrum grâce à la seringue Vetacol 15ml.",
+      hours: "H",
+      minutes: "MIN",
+      seconds: "SEC"
+    },
+    stickyCta: {
+      title: "Seringue Immunitaire de Colostrum VETACOL 15ml",
+      sub: "Formule Complexe 5-en-1 Certifiée Vétérinaire",
+      buyBtn: "🚀 Acheter sur Coupang",
+      consultBtn: "📞 Consultation Vétérinaire 1:1"
+    },
     hero: {
       targetBadge: "🐮 Cible : Veaux (Bovins lait & viande) | Booster de Colostrum 15ml",
       ruminantNote: "※ 🐐 Également très efficace pour la vitalité et l'immunité initiales d'autres jeunes ruminants comme les chèvres et les moutons.",
@@ -622,11 +674,6 @@ export const translations = {
       footerNote2: "* Consultation sur mesure dans toute la ferme",
       visitBtn: "Visiter le site web"
     },
-    floatingBar: {
-      badge: "Officiel Coupang",
-      title: "Supplément immunitaire au colostrum pour veau Vetacol 15 ml",
-      btn: "🛒 Acheter sur Coupang"
-    },
     footer: {
       company: "Agrokorea Co., Ltd. | Conseiller Dr. James Hong",
       address: "Bureau 1506, Bâtiment Seongji, 75 Keunuemul-ro, Mapo-gu, Séoul, République de Corée",
@@ -659,7 +706,17 @@ export const translations = {
       quick2Label: "Quand le donner ?",
       quick3: "Comment conserver le produit ?",
       quick3Label: "Infos stockage ?",
-      placeholder: "Posez vos questions ici..."
+      placeholder: "Posez vos questions ici...",
+      typing: "Génération de la réponse...",
+      error: "Désolé, une erreur temporaire s'est produite. Veuillez réessayer."
+    },
+    a11y: {
+      chatDialog: "Fenêtre de chat vétérinaire IA VETACOL",
+      chatClose: "Fermer le chat",
+      chatOpen: "Ouvrir le chat IA vétérinaire",
+      chatSend: "Envoyer le message",
+      quickGroup: "Questions rapides",
+      qrAlt: "Code QR de la page officielle VETACOL"
     }
   }
 };
