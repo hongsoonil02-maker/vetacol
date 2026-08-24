@@ -16,7 +16,13 @@
  * 배포(CLI 방식): 저장소 루트에서 npx wrangler deploy && npx wrangler secret put OPENAI_API_KEY
  */
 
-const DEFAULT_ORIGINS = ['https://hongsoonil02-maker.github.io'];
+const DEFAULT_ORIGINS = [
+  'https://hongsoonil02-maker.github.io',
+  'https://parvogel.kr', 'https://www.parvogel.kr',
+  'https://rotagal.kr', 'https://www.rotagal.kr',
+  'https://monsmecta.kr', 'https://www.monsmecta.kr',
+  'https://vetacol.kr', 'https://www.vetacol.kr'
+];
 
 const WINDOW_MS = 5 * 60 * 1000;
 const MAX_REQUESTS = 10;
