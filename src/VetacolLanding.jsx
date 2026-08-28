@@ -231,20 +231,20 @@ const VetacolLanding = () => {
             </div>
           </div>
 
-          {/* 쿠팡 즉시 구매 CTA 버튼 (히어로 섹션) */}
-          <div className="pt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+          {/* 쿠팡 즉시 구매 CTA 버튼 — 좌우 대칭 rounded-full 패턴 (파보겔/로타갈 통일 디자인) */}
+          <div className="pt-8 flex flex-col sm:flex-row justify-center items-stretch gap-3 sm:gap-4">
             <a
               href={COUPANG_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-black text-lg sm:text-xl rounded-2xl shadow-xl hover:shadow-amber-500/30 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 group border-2 border-yellow-200 animate-bounce sm:animate-none"
+              className="flex-1 sm:flex-initial w-full sm:w-auto px-6 sm:px-8 py-4 sm:py-5 bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-black text-base sm:text-lg rounded-full shadow-xl hover:shadow-amber-500/30 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2.5 group border-2 border-yellow-200 animate-bounce sm:animate-none"
             >
-              <span className="text-2xl">🚀</span>
+              <span className="text-xl">🚀</span>
               <span>{t.hero.coupangBtn}</span>
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </a>
-            <div className="text-xs sm:text-sm text-emerald-200 font-medium flex items-center gap-1.5 bg-black/30 px-4 py-3 rounded-xl border border-white/10">
-              <span className="text-amber-400">⚡</span> {t.hero.coupangSub}
+            <div className="flex-1 sm:flex-initial w-full sm:w-auto text-xs sm:text-sm text-emerald-200 font-semibold flex items-center justify-center gap-1.5 bg-black/30 px-5 py-4 sm:py-5 rounded-full border border-white/20 whitespace-nowrap">
+              <span className="text-amber-400 text-base">⚡</span> {t.hero.coupangSub}
             </div>
           </div>
         </div>
