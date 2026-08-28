@@ -553,8 +553,8 @@ const VetacolLanding = () => {
         </div>
       </footer>
 
-      {/* AI Chatbot Floating Action Button & Window */}
-      <div className="fixed bottom-24 right-6 sm:bottom-24 sm:right-8 z-[60] flex flex-col items-end">
+      {/* AI Chatbot Floating Action Button & Window — 우측 하단 고정 (♿버튼과 대칭) */}
+      <div className="fixed bottom-6 sm:bottom-8 right-6 sm:right-8 z-[60] flex flex-col items-end">
         {isChatOpen ? (
           <div className="bg-white w-[320px] sm:w-[400px] h-[450px] sm:h-[550px] max-h-[80vh] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4" role="dialog" aria-label={t.a11y.chatDialog}>
             <div className="bg-[#00513b] p-3 sm:p-4 flex justify-between items-center text-white">

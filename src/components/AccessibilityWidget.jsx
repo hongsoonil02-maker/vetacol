@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 /**
  * AccessibilityWidget
@@ -109,26 +109,26 @@ const AccessibilityWidget = ({ t }) => {
 
   return (
     <>
-      {/* 접근성 토글 버튼 */}
+      {/* ♿ 접근성 토글 버튼 — 쳇봇 버튼과 동일한 원형 스타일 동기화 */}
       <button
-        className="a11y-widget-btn"
+        className="w-16 h-16 sm:w-20 sm:h-20 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-110 hover:-translate-y-2 ring-4 ring-white/30 fixed left-6 sm:left-8 bottom-6 sm:bottom-8 z-[60]"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label={open ? (a11y.a11yWidgetClose || "접근성 메뉴 닫기") : (a11y.a11yWidgetOpen || "접근성 메뉴 열기")}
         title={open ? (a11y.a11yWidgetClose || "접근성 메뉴 닫기") : (a11y.a11yWidgetOpen || "접근성 메뉴 열기")}
       >
-        <span aria-hidden="true" style={{ fontSize: "1.25rem", lineHeight: 1 }}>♿</span>
+        <span aria-hidden="true" style={{ fontSize: "2rem", lineHeight: 1 }}>♿</span>
       </button>
 
-      {/* 접근성 패널 */}
+      {/* 접근성 패널 — 좌측 하단에서 위로 열림 */}
       {open && (
         <div
           className="a11y-widget-panel"
           role="dialog"
           aria-modal="false"
           aria-label={a11y.a11yWidgetTitle || "접근성 설정"}
-          style={{ left: "2.75rem" }}
+          style={{ left: "6rem", bottom: "6rem", top: "auto", transform: "none" }}
         >
           <h2>{a11y.a11yWidgetTitle || "접근성 설정"}</h2>
 
