@@ -14,6 +14,8 @@
  *   2. Settings > Variables and Secrets > Add Secret
  *        - OPENAI_API_KEY      = OpenAI 키 (챗봇용)
  *        - INQUIRY_WEBHOOK_URL = 문의 전달용 웹훅 URL (Slack/Discord Incoming Webhook 또는 Google Apps Script)
+ *                                여러 곳으로 동시 전달하려면 콤마(,)로 구분해 나열 (예: 디스코드URL,구글AppsScriptURL)
+ *        - (선택) SHEET_WEBHOOK_URL = 구글 시트(Apps Script) 웹앱 URL을 별도로 지정하고 싶을 때
  *        - (선택) ALLOWED_ORIGIN = 추가 허용 오리진(CSV)
  *   3. 배포 주소: https://<이름>.<계정>.workers.dev/api/chat , /api/inquiry
  *
@@ -168,9 +170,15 @@ async function handleInquiry(body, env, corsHeaders) {
     return json({ error: 'name, phone, region are required' }, 400, corsHeaders);
   }
 
-  const webhook = env.INQUIRY_WEBHOOK_URL;
-  if (!webhook) {
-    console.error('INQUIRY_WEBHOOK_URL is not configured');
+  const webhooks = [
+    ...(env.INQUIRY_WEBHOOK_URL ? env.INQUIRY_WEBHOOK_URL.split(',') : []),
+    ...(env.SHEET_WEBHOOK_URL ? env.SHEET_WEBHOOK_URL.split(',') : [])
+  ]
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  if (webhooks.length === 0) {
+    console.error('No inquiry webhook is configured (INQUIRY_WEBHOOK_URL / SHEET_WEBHOOK_URL)');
     return json({ error: 'Inquiry service is not configured' }, 500, corsHeaders);
   }
 
@@ -197,21 +205,30 @@ async function handleInquiry(body, env, corsHeaders) {
     inquiry: { product, name, phone, region, farmSize, inquiry, language, distributor, submittedAt }
   };
 
-  try {
-    const res = await fetch(webhook, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) {
-      console.error(`Inquiry webhook error: ${res.status}`);
-      return json({ error: 'Failed to deliver inquiry' }, 502, corsHeaders);
+  const results = await Promise.allSettled(
+    webhooks.map((hookUrl) =>
+      fetch(hookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+    )
+  );
+
+  let delivered = 0;
+  results.forEach((r, i) => {
+    if (r.status === 'fulfilled' && r.value.ok) {
+      delivered += 1;
+    } else {
+      const reason = r.status === 'fulfilled' ? `HTTP ${r.value.status}` : r.reason;
+      console.error(`Inquiry webhook #${i} failed:`, reason);
     }
-    return json({ ok: true }, 200, corsHeaders);
-  } catch (err) {
-    console.error('Inquiry forward error:', err);
-    return json({ error: 'Internal error' }, 500, corsHeaders);
+  });
+
+  if (delivered === 0) {
+    return json({ error: 'Failed to deliver inquiry' }, 502, corsHeaders);
   }
+  return json({ ok: true, delivered }, 200, corsHeaders);
 }
 
 export default {
