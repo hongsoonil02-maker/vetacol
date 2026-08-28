@@ -40,6 +40,17 @@ const VetacolLanding = () => {
     chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
+  // 언어 전환 시 대화가 아직 시작 전(초기 인사말만 있는 상태)이면
+  // 초기 인사말을 새 언어로 갱신한다. 이미 대화가 진행 중이면 덮어쓰지 않는다.
+  useEffect(() => {
+    setChatMessages((prev) => {
+      if (prev.length === 1 && prev[0].id === 'init') {
+        return [{ id: 'init', role: 'ai', content: t.chatbot.initialMsg }];
+      }
+      return prev;
+    });
+  }, [lang, t.chatbot.initialMsg]);
+
   const sendMessage = async (text) => {
     const userMessage = text.trim();
     if (!userMessage) return;
@@ -95,7 +106,7 @@ const VetacolLanding = () => {
       <AccessibilityWidget t={t} />
 
       {/* 1. 최상단 신뢰도 배너 (모바일 줄바꿈 및 아이콘 찌그러짐 방지 최적화) */}
-      <div className="bg-[#002b1f] text-emerald-300 text-xs sm:text-sm py-2 sm:py-2.5 px-3 sm:px-4 text-center font-medium tracking-wide border-b border-emerald-800/40" role="banner">
+      <div className="bg-[#002b1f] text-emerald-300 text-xs sm:text-sm py-2 sm:py-2.5 px-3 sm:px-4 text-center font-medium tracking-wide border-b border-emerald-800/40">
         <div className="flex items-center justify-center gap-1.5 max-w-5xl mx-auto">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
           <span className="leading-snug break-keep">{t.banner}</span>
@@ -251,7 +262,7 @@ const VetacolLanding = () => {
       </header>
 
       {/* 헤더 침범(-mt-12) 제거 및 간격 조정(py-12) */}
-      <main className="max-w-5xl mx-auto px-4 py-12 relative z-20 space-y-16 pb-32">
+      <div className="max-w-5xl mx-auto px-4 py-12 relative z-20 space-y-16 pb-32">
 
         {/* 3. 4대 특장점 (Why Vetacol?) */}
         <section className="bg-white p-6 sm:p-10 rounded-3xl shadow-xl border border-gray-100">
@@ -527,7 +538,7 @@ const VetacolLanding = () => {
           </div>
         </section>
 
-      </main>
+      </div>
 
       {/* 9. 상세 푸터 (법적 공지 및 판매원 정보, 하단 스티키 바 높이만큼 여백 확보) */}
       <footer className="bg-slate-900 text-slate-400 pt-12 pb-32 sm:pb-24 px-6 border-t border-slate-800 text-xs">
