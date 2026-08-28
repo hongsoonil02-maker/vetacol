@@ -1,14 +1,287 @@
 @import "tailwindcss";
 
+/* ============================================================
+   1. CSS 변수 — 글자 크기 & 고대비 토큰
+   ============================================================ */
+:root {
+  --font-scale: 1;
+  --focus-ring: 0 0 0 3px #00513b, 0 0 0 5px #fbbf24;
+}
+
+/* 글자 크기 단계 */
+html.font-size-lg  { font-size: calc(1rem * 1.15); }
+html.font-size-xl  { font-size: calc(1rem * 1.30); }
+
+/* 고대비 모드 */
+html.high-contrast {
+  --hc-bg: #000;
+  --hc-text: #fff;
+  --hc-accent: #ffff00;
+  --hc-border: #fff;
+}
+html.high-contrast body,
+html.high-contrast .bg-\[\#00513b\],
+html.high-contrast .bg-\[\#00664a\],
+html.high-contrast .bg-\[\#003828\],
+html.high-contrast .bg-\[\#002b1f\] {
+  background: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
+}
+html.high-contrast a,
+html.high-contrast button {
+  color: var(--hc-accent) !important;
+  text-decoration: underline !important;
+  border-color: var(--hc-border) !important;
+}
+html.high-contrast img { filter: grayscale(20%) contrast(1.2); }
+
+/* 링크 밑줄 강제 */
+html.force-underline a:not([role="button"]) {
+  text-decoration: underline !important;
+}
+
+/* 포커스 강조 강화 */
+html.strong-focus *:focus-visible {
+  outline: 3px solid #fbbf24 !important;
+  outline-offset: 3px !important;
+  box-shadow: var(--focus-ring) !important;
+}
+
+/* ============================================================
+   2. 전역 기본 — 한글 줄 맞춤 · 모바일 최적화
+   ============================================================ */
 @layer base {
+  html {
+    /* 한글 기본 폰트 패밀리 */
+    font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic',
+                 'Noto Sans', system-ui, sans-serif;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* lang 속성에 따른 폰트 전환 */
+  :lang(en),
+  :lang(fr) {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  }
+
   html, body, * {
     word-break: keep-all;
     overflow-wrap: break-word;
+    -webkit-word-break: keep-all;
+  }
+
+  /* 전역 focus-visible 기본 스타일 */
+  *:focus-visible {
+    outline: 3px solid #00513b;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* 모바일 최소 터치 타겟 48px (WCAG 2.5.5) */
+  button,
+  a,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+    /* 실제 버튼 높이를 건드리지 않고 hit area만 확장 */
+  }
+
+  /* 인라인 버튼(태그/뱃지 류)은 예외 */
+  button.no-min-h,
+  a.no-min-h {
+    min-height: unset;
   }
 }
 
+/* ============================================================
+   3. 건너뛰기 링크 (Skip Navigation)
+   ============================================================ */
+.skip-nav-link {
+  position: absolute;
+  top: -9999px;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.75rem 1.25rem;
+  background: #00513b;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+.skip-nav-link:focus {
+  top: 0;
+  outline: 3px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   4. 애니메이션 중지 모드
+   ============================================================ */
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   5. 접근성 위젯 패널
+   ============================================================ */
+.a11y-widget-btn {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9000;
+  width: 2.75rem;
+  height: 2.75rem;
+  background: #00513b;
+  color: #fff;
+  border-radius: 0 0.75rem 0.75rem 0;
+  border: 2px solid #fbbf24;
+  border-left: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.25);
+  transition: background 0.2s, width 0.2s;
+}
+.a11y-widget-btn:hover,
+.a11y-widget-btn:focus-visible {
+  background: #003828;
+  width: 3rem;
+  outline: 3px solid #fbbf24;
+  outline-offset: 2px;
+}
+.a11y-widget-btn:focus-visible {
+  outline-offset: 0;
+}
+.a11y-widget-panel {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 8999;
+  background: #fff;
+  border: 2px solid #00513b;
+  border-left: none;
+  border-radius: 0 1rem 1rem 0;
+  padding: 1rem 1rem 1rem 0.75rem;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.18);
+  min-width: 200px;
+  max-width: 260px;
+}
+.a11y-widget-panel h2 {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #00513b;
+  margin-bottom: 0.75rem;
+  padding-left: 0.25rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+}
+.a11y-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.375rem 0.25rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+.a11y-row:last-child { border-bottom: none; }
+.a11y-row-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #374151;
+  flex: 1;
+}
+.a11y-row-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.a11y-icon-btn {
+  width: 1.875rem;
+  height: 1.875rem;
+  min-height: unset !important;
+  border: 1.5px solid #d1d5db;
+  border-radius: 0.375rem;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  font-weight: 700;
+  padding: 0;
+}
+.a11y-icon-btn:hover { background: #e5e7eb; border-color: #00513b; }
+.a11y-icon-btn:focus-visible {
+  outline: 2px solid #00513b;
+  outline-offset: 1px;
+}
+.a11y-icon-btn.active {
+  background: #00513b;
+  color: #fff;
+  border-color: #00513b;
+}
+.a11y-reset-btn {
+  width: 100%;
+  margin-top: 0.625rem;
+  padding: 0.375rem;
+  min-height: unset !important;
+  background: #f3f4f6;
+  border: 1.5px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.a11y-reset-btn:hover { background: #e5e7eb; }
+.a11y-reset-btn:focus-visible {
+  outline: 2px solid #00513b;
+  outline-offset: 1px;
+}
+
+/* ============================================================
+   6. 유틸리티
+   ============================================================ */
 @layer utilities {
   .glass {
     @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-lg;
+  }
+
+  /* 한글 전용 줄바꿈 강제 — Tailwind break-keep가 없을 경우 대체 */
+  .break-keep-all {
+    word-break: keep-all !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /* 모바일 전용 간격 보정 */
+  .mobile-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }

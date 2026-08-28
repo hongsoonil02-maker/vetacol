@@ -5,11 +5,29 @@ import { COUPANG_URL, VETALIS_URL, AGROKOREA_URL, CONTACT } from './constants';
 import { CHAT_API_URL } from './config';
 import GoldenTimeTimer from './components/GoldenTimeTimer';
 import StickyBottomCTA from './components/StickyBottomCTA';
+import SkipNav from './components/SkipNav';
+import AccessibilityWidget from './components/AccessibilityWidget';
+
 
 
 const VetacolLanding = () => {
-  const [lang, setLang] = useState('ko');
+  // 브라우저 언어 자동 감지로 초기 언어 설정
+  const detectLang = () => {
+    const nav = (navigator.language || navigator.userLanguage || 'ko').toLowerCase();
+    if (nav.startsWith('fr')) return 'fr';
+    if (nav.startsWith('en')) return 'en';
+    return 'ko';
+  };
+  const [lang, setLang] = useState(detectLang);
   const t = translations[lang];
+
+  // html lang 속성 동적 설정 (문화권 존중 & 스크린리더 언어 전환)
+  useEffect(() => {
+    document.documentElement.setAttribute('lang', lang);
+    // 프랑스어·영어 시 dir 속성은 LTR 유지 (RTL 불필요)
+    document.documentElement.setAttribute('dir', 'ltr');
+  }, [lang]);
+
 
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState([
@@ -70,8 +88,14 @@ const VetacolLanding = () => {
   return (
     <div className="min-h-screen font-sans text-gray-800 bg-slate-50 selection:bg-[#00513b] selection:text-white relative break-keep">
 
+      {/* ♿ 건너뛰기 링크 (키보드/스크린리더 최우선) */}
+      <SkipNav t={t} />
+
+      {/* ♿ 좌측 고정 접근성 위젯 */}
+      <AccessibilityWidget t={t} />
+
       {/* 1. 최상단 신뢰도 배너 (모바일 줄바꿈 및 아이콘 찌그러짐 방지 최적화) */}
-      <div className="bg-[#002b1f] text-emerald-300 text-xs sm:text-sm py-2 sm:py-2.5 px-3 sm:px-4 text-center font-medium tracking-wide border-b border-emerald-800/40">
+      <div className="bg-[#002b1f] text-emerald-300 text-xs sm:text-sm py-2 sm:py-2.5 px-3 sm:px-4 text-center font-medium tracking-wide border-b border-emerald-800/40" role="banner">
         <div className="flex items-center justify-center gap-1.5 max-w-5xl mx-auto">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
           <span className="leading-snug break-keep">{t.banner}</span>
@@ -79,7 +103,7 @@ const VetacolLanding = () => {
       </div>
 
       {/* 2. 로타갈(Rotagal) 스타일 상단 내비게이션 헤더 바 (모바일 최적화: 토글 20% 축소 및 레이아웃 깨짐 방지) */}
-      <nav className="sticky top-0 z-50 bg-[#00513b]/95 backdrop-blur-md border-b border-white/15 px-2.5 sm:px-8 py-2 sm:py-3 shadow-lg transition-all">
+      <nav id="main-nav" className="sticky top-0 z-50 bg-[#00513b]/95 backdrop-blur-md border-b border-white/15 px-2.5 sm:px-8 py-2 sm:py-3 shadow-lg transition-all" aria-label="주요 네비게이션">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-1.5 sm:gap-3">
           {/* 좌측: 로고 및 제품명 (Rotagal 스타일 브랜딩 - 모바일에서 유연한 너비 적용) */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0">
@@ -135,9 +159,12 @@ const VetacolLanding = () => {
       </nav>
 
       {/* 3시간 골든타임 시계 타이머 */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-8" aria-label="골든타임 카운트다운">
         <GoldenTimeTimer t={t} />
       </div>
+
+      {/* ===== 메인 콘텐츠 영역 (스크린리더 id 앵커) ===== */}
+      <main id="main-content" aria-label="메인 콘텐츠">
 
 
 
@@ -595,11 +622,15 @@ const VetacolLanding = () => {
         )}
       </div>
 
+      {/* 메인 콘텐츠 영역 닫기 */}
+      </main>
+
       {/* 모바일 반응형 스티키 CTA 바 */}
       <StickyBottomCTA t={t} />
     </div>
   );
 };
+
 
 
 
