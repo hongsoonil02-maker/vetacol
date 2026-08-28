@@ -553,10 +553,11 @@ const VetacolLanding = () => {
         </div>
       </footer>
 
-      {/* AI Chatbot Floating Action Button & Window — 우측 하단 고정 (♿버튼과 대칭) */}
-      <div className="fixed bottom-6 sm:bottom-8 right-6 sm:right-8 z-[60] flex flex-col items-end">
+      {/* AI Chatbot Floating Action Button & Window — 우측 하단 고정 (♿버튼과 대칭)
+          (모바일: 하단 스티키 CTA 바와 겹치지 않도록 위로 ~3줄 올림) */}
+      <div className="fixed bottom-24 sm:bottom-8 right-6 sm:right-8 z-[60] flex flex-col items-end">
         {isChatOpen ? (
-          <div className="bg-white w-[320px] sm:w-[400px] h-[450px] sm:h-[550px] max-h-[80vh] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4" role="dialog" aria-label={t.a11y.chatDialog}>
+          <div className="bg-white w-[320px] max-w-[calc(100vw-3rem)] sm:w-[400px] sm:max-w-none h-[450px] sm:h-[550px] max-h-[80vh] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4" role="dialog" aria-label={t.a11y.chatDialog}>
             <div className="bg-[#00513b] p-3 sm:p-4 flex justify-between items-center text-white">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center">

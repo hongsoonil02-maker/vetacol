@@ -108,10 +108,11 @@ const AccessibilityWidget = ({ t }) => {
   }, [open]);
 
   return (
-    <>
-      {/* ♿ 접근성 토글 버튼 — 쳇봇 버튼과 동일한 원형 스타일 동기화 */}
+    <div className="fixed left-6 bottom-24 sm:left-8 sm:bottom-8 z-[60]">
+      {/* ♿ 접근성 토글 버튼 — 쳇봇 버튼과 동일한 원형 스타일 동기화
+          (모바일: 하단 스티키 CTA 바와 겹치지 않도록 위로 ~3줄 올림) */}
       <button
-        className="w-16 h-16 sm:w-20 sm:h-20 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-110 hover:-translate-y-2 ring-4 ring-white/30 fixed left-6 sm:left-8 bottom-6 sm:bottom-8 z-[60]"
+        className="w-16 h-16 sm:w-20 sm:h-20 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-110 hover:-translate-y-2 ring-4 ring-white/30"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="dialog"
@@ -121,14 +122,21 @@ const AccessibilityWidget = ({ t }) => {
         <span aria-hidden="true" style={{ fontSize: "2rem", lineHeight: 1 }}>♿</span>
       </button>
 
-      {/* 접근성 패널 — 좌측 하단에서 위로 열림 */}
+      {/* 접근성 패널 — 버튼 바로 위로 열림, 모바일 좌우 잘림 방지 (max-w 제한) */}
       {open && (
         <div
           className="a11y-widget-panel"
           role="dialog"
           aria-modal="false"
           aria-label={a11y.a11yWidgetTitle || "접근성 설정"}
-          style={{ left: "6rem", bottom: "6rem", top: "auto", transform: "none" }}
+          style={{
+            position: "absolute",
+            left: 0,
+            bottom: "calc(100% + 0.5rem)",
+            top: "auto",
+            transform: "none",
+            maxWidth: "calc(100vw - 3rem)",
+          }}
         >
           <h2>{a11y.a11yWidgetTitle || "접근성 설정"}</h2>
 
@@ -238,7 +246,7 @@ const AccessibilityWidget = ({ t }) => {
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

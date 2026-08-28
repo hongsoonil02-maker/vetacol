@@ -71,6 +71,12 @@ html.strong-focus *:focus-visible {
     -webkit-word-break: keep-all;
   }
 
+  /* 모바일 좌우 잘림 방지 — 가로 스크롤/클리핑 차단
+     (overflow-x: clip은 sticky position을 깨지 않음) */
+  html, body {
+    overflow-x: clip;
+  }
+
   /* 전역 focus-visible 기본 스타일 */
   *:focus-visible {
     outline: 3px solid #00513b;
