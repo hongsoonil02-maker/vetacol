@@ -108,18 +108,17 @@ const AccessibilityWidget = ({ t }) => {
   }, [open]);
 
   return (
-    <div className="fixed left-6 bottom-24 sm:left-8 sm:bottom-8 z-[60]">
-      {/* ♿ 접근성 토글 버튼 — 쳇봇 버튼과 동일한 원형 스타일 동기화
-          (모바일: 하단 스티키 CTA 바와 겹치지 않도록 위로 ~3줄 올림) */}
+    <div className="fixed left-4 bottom-20 sm:left-8 sm:bottom-8 z-[60]">
+      {/* ♿ 접근성 토글 버튼 — 챗봇 버튼과 조화로운 원형 스타일 (모바일 최적화: 56px 크기 & 하단 스티키 바 간섭 최소화) */}
       <button
-        className="w-16 h-16 sm:w-20 sm:h-20 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-110 hover:-translate-y-2 ring-4 ring-white/30"
+        className="w-14 h-14 sm:w-16 sm:h-16 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-105 active:scale-95 ring-4 ring-white/30 focus:outline-none focus:ring-4 focus:ring-amber-400"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label={open ? (a11y.a11yWidgetClose || "접근성 메뉴 닫기") : (a11y.a11yWidgetOpen || "접근성 메뉴 열기")}
         title={open ? (a11y.a11yWidgetClose || "접근성 메뉴 닫기") : (a11y.a11yWidgetOpen || "접근성 메뉴 열기")}
       >
-        <span aria-hidden="true" style={{ fontSize: "2rem", lineHeight: 1 }}>♿</span>
+        <span aria-hidden="true" style={{ fontSize: "1.75rem", lineHeight: 1 }}>♿</span>
       </button>
 
       {/* 접근성 패널 — 버튼 바로 위로 열림, 모바일 좌우 잘림 방지 (max-w 제한) */}

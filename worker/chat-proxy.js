@@ -99,7 +99,13 @@ async function handleChat(body, env, corsHeaders) {
     return json({ error: 'Chat service is not configured' }, 500, corsHeaders);
   }
 
-  const systemPrompt = PRODUCT_PROMPTS[body?.product] || PRODUCT_PROMPTS.vetacol;
+  let systemPrompt = PRODUCT_PROMPTS[body?.product] || PRODUCT_PROMPTS.vetacol;
+  const requestedLang = clean(body?.language, 10);
+  if (requestedLang) {
+    const langNames = { ko: 'Korean (한국어)', en: 'English', fr: 'French (Français)' };
+    const targetLangName = langNames[requestedLang] || requestedLang;
+    systemPrompt += `\nUSER'S PREFERRED INTERFACE LANGUAGE: ${targetLangName}. Unless the user explicitly writes in a different language, respond in ${targetLangName}.`;
+  }
   const message = clean(body?.message, MAX_MESSAGE_LENGTH);
   if (!message) {
     return json({ error: 'message is required' }, 400, corsHeaders);

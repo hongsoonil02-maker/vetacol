@@ -11,22 +11,44 @@ import AccessibilityWidget from './components/AccessibilityWidget';
 
 
 const VetacolLanding = () => {
-  // 브라우저 언어 자동 감지로 초기 언어 설정
+  // 브라우저 언어 자동 감지 및 localStorage 저장값 복원
   const detectLang = () => {
+    try {
+      const saved = localStorage.getItem('vetacol_lang');
+      if (saved && (saved === 'ko' || saved === 'en' || saved === 'fr')) {
+        return saved;
+      }
+    } catch {}
     const nav = (navigator.language || navigator.userLanguage || 'ko').toLowerCase();
     if (nav.startsWith('fr')) return 'fr';
     if (nav.startsWith('en')) return 'en';
     return 'ko';
   };
   const [lang, setLang] = useState(detectLang);
-  const t = translations[lang];
+  const t = translations[lang] || translations.ko;
 
-  // html lang 속성 동적 설정 (문화권 존중 & 스크린리더 언어 전환)
+  // 언어 변경 핸들러 (localStorage 저장 동기화)
+  const handleLanguageChange = (newLang) => {
+    setLang(newLang);
+    try {
+      localStorage.setItem('vetacol_lang', newLang);
+    } catch {}
+  };
+
+  // html lang 속성 및 SEO meta 동적 설정 (문화권 존중 & 스크린리더 언어 전환)
   useEffect(() => {
     document.documentElement.setAttribute('lang', lang);
-    // 프랑스어·영어 시 dir 속성은 LTR 유지 (RTL 불필요)
     document.documentElement.setAttribute('dir', 'ltr');
-  }, [lang]);
+    if (t?.meta?.title) {
+      document.title = t.meta.title;
+    }
+    if (t?.meta?.desc) {
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', t.meta.desc);
+      }
+    }
+  }, [lang, t]);
 
 
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -35,6 +57,18 @@ const VetacolLanding = () => {
   ]);
   const [chatInput, setChatInput] = useState('');
   const chatMessagesEndRef = useRef(null);
+
+  // 챗봇 열릴 때 Esc 키로 닫기 지원 (접근성 향상)
+  useEffect(() => {
+    if (!isChatOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsChatOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isChatOpen]);
 
   useEffect(() => {
     chatMessagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -69,7 +103,7 @@ const VetacolLanding = () => {
         const response = await fetch(CHAT_API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ product: 'vetacol', message: userMessage })
+          body: JSON.stringify({ product: 'vetacol', message: userMessage, language: lang })
         });
 
         if (!response.ok) {
@@ -139,7 +173,7 @@ const VetacolLanding = () => {
           {/* 우측: 외국어 토글 스위치 (모바일에서 버튼 크기 20% 이상 축소 및 간격 최적화로 잘림 100% 해결) */}
           <div className="inline-flex items-center bg-black/35 backdrop-blur-md border border-white/20 p-0.5 sm:p-1 rounded-full shadow-inner shrink-0">
             <button
-              onClick={() => setLang('ko')}
+              onClick={() => handleLanguageChange('ko')}
               className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-sm font-extrabold tracking-tight sm:tracking-normal transition-all duration-300 ${lang === 'ko'
                 ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
                 : 'text-emerald-100/70 hover:text-white'
@@ -148,7 +182,7 @@ const VetacolLanding = () => {
               한국어
             </button>
             <button
-              onClick={() => setLang('en')}
+              onClick={() => handleLanguageChange('en')}
               className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-sm font-extrabold tracking-tight sm:tracking-normal transition-all duration-300 ${lang === 'en'
                 ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
                 : 'text-emerald-100/70 hover:text-white'
@@ -157,7 +191,7 @@ const VetacolLanding = () => {
               English
             </button>
             <button
-              onClick={() => setLang('fr')}
+              onClick={() => handleLanguageChange('fr')}
               className={`px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-sm font-extrabold tracking-tight sm:tracking-normal transition-all duration-300 ${lang === 'fr'
                 ? 'bg-gradient-to-r from-emerald-500 to-[#00513b] text-white shadow-md scale-105'
                 : 'text-emerald-100/70 hover:text-white'
@@ -513,8 +547,18 @@ const VetacolLanding = () => {
               </div>
 
               <div className="pt-1 flex flex-col gap-1.5 text-xs text-emerald-200">
-                <span className="flex items-center gap-1.5">{t.cta.phone1} <strong className="text-white text-sm">{CONTACT.tel}</strong></span>
-                <span className="flex items-center gap-1.5">{t.cta.phone2} <strong className="text-white text-sm">{CONTACT.mobile}</strong></span>
+                <span className="flex items-center gap-1.5">
+                  {t.cta.phone1}{" "}
+                  <a href={`tel:${(t.cta.phone1Val || CONTACT.tel).replace(/[^0-9+]/g, "")}`} className="text-white text-sm font-bold hover:text-amber-300 transition-colors">
+                    {t.cta.phone1Val || CONTACT.tel}
+                  </a>
+                </span>
+                <span className="flex items-center gap-1.5">
+                  {t.cta.phone2}{" "}
+                  <a href={`tel:${(t.cta.phone2Val || CONTACT.mobile).replace(/[^0-9+]/g, "")}`} className="text-white text-sm font-bold hover:text-amber-300 transition-colors">
+                    {t.cta.phone2Val || CONTACT.mobile}
+                  </a>
+                </span>
                 <span className="flex items-center gap-1.5">{t.cta.web}</span>
               </div>
             </div>
@@ -565,10 +609,10 @@ const VetacolLanding = () => {
       </footer>
 
       {/* AI Chatbot Floating Action Button & Window — 우측 하단 고정 (♿버튼과 대칭)
-          (모바일: 하단 스티키 CTA 바와 겹치지 않도록 위로 ~3줄 올림) */}
-      <div className="fixed bottom-24 sm:bottom-8 right-6 sm:right-8 z-[60] flex flex-col items-end">
+          (모바일: 56px 크기 & 하단 스티키 CTA 바 간섭 최소화) */}
+      <div className="fixed bottom-20 sm:bottom-8 right-4 sm:right-8 z-[60] flex flex-col items-end">
         {isChatOpen ? (
-          <div className="bg-white w-[320px] max-w-[calc(100vw-3rem)] sm:w-[400px] sm:max-w-none h-[450px] sm:h-[550px] max-h-[80vh] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-4" role="dialog" aria-label={t.a11y.chatDialog}>
+          <div className="bg-white w-[320px] max-w-[calc(100vw-2rem)] sm:w-[400px] sm:max-w-none h-[450px] sm:h-[550px] max-h-[75vh] rounded-3xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden transform transition-all duration-300 origin-bottom-right mb-2 sm:mb-4" role="dialog" aria-label={t.a11y.chatDialog}>
             <div className="bg-[#00513b] p-3 sm:p-4 flex justify-between items-center text-white">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -626,10 +670,10 @@ const VetacolLanding = () => {
         ) : (
           <button
             onClick={() => setIsChatOpen(true)}
-            className="w-16 h-16 sm:w-20 sm:h-20 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-110 hover:-translate-y-2 ring-4 ring-white/30"
+            className="w-14 h-14 sm:w-16 sm:h-16 bg-[#00513b] hover:bg-[#003828] text-white rounded-full shadow-2xl flex items-center justify-center transform transition-all hover:scale-105 active:scale-95 ring-4 ring-white/30 focus:outline-none focus:ring-4 focus:ring-amber-400"
             aria-label={t.a11y.chatOpen}
           >
-            <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10" />
+            <MessageCircle className="w-7 h-7 sm:w-8 sm:h-8" />
           </button>
         )}
       </div>

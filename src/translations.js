@@ -1,5 +1,9 @@
 export const translations = {
   ko: {
+    meta: {
+      title: "베타콜 Vetacol | 수의사가 보증하는 송아지 초유 면역 영양제",
+      desc: "출생 직후 송아지 생존 골든타임! 제임스 홍 고문수의사팀과 (주)한국아그로가 제안하는 5대 복합 혁신 포뮬러(초유·유청·바실러스·MCT·비타민). 15ml 시린지로 간편하게 급여하세요."
+    },
     banner: "🇫🇷 프랑스 VETALIS 직수입 완제품 | (주)한국아그로 × 고문수의사 제임스 홍 임상 솔루션",
     goldenTimer: {
       badge: "🚨 송아지 생존 골든타임",
@@ -189,6 +193,8 @@ export const translations = {
       qrDesc: "포스터, 리플렛, 명함 인용 가능! 스마트폰 카메라로 스캔 시 즉시 모바일 페이지로 연결됩니다.",
       phone1: "📞 고객상담:",
       phone2: "📱 모바일 상담:",
+      phone1Val: "02-6949-5708",
+      phone2Val: "010-5407-5708",
       web: "🌐 공식 웹사이트: www.agrokorea.kr",
       footerNote1: "* 평일 09:00 ~ 18:00 (주말/공휴일 휴무)",
       footerNote2: "* 전국 농장 맞춤 컨설팅 지원",
@@ -262,6 +268,10 @@ export const translations = {
     }
   },
   en: {
+    meta: {
+      title: "VETACOL | French Colostrum Immune Supplement for Calves",
+      desc: "Calf Golden Hour Colostrum Booster! 5-in-1 Complex Formula (Colostrum, Whey Protein, Bacillus Probiotics, MCT, Vitamins) by VETALIS France & Agrokorea. 15ml oral syringe."
+    },
     banner: "🇫🇷 Direct Import from VETALIS France | Agrokorea Co., Ltd. × Dr. James Hong Clinical Solution",
     goldenTimer: {
       badge: "🚨 Calf Survival Golden Time",
@@ -449,17 +459,19 @@ export const translations = {
       qrBadge: "📱 Easy Smartphone Scan",
       qrTitle: "Vetacol Official Landing Page QR",
       qrDesc: "Available for posters, leaflets, and business cards! Scan with smartphone camera to connect instantly.",
-      phone1: "📞 Customer Service:",
-      phone2: "📱 Mobile Support:",
+      phone1: "📞 Global Service:",
+      phone2: "📱 Mobile / WhatsApp:",
+      phone1Val: "+82-2-6949-5708",
+      phone2Val: "+82-10-5407-5708",
       web: "🌐 Official Website: www.agrokorea.kr",
-      footerNote1: "* Weekdays 09:00 ~ 18:00 (Closed Weekends/Holidays)",
-      footerNote2: "* Nationwide Farm Consulting Supported",
+      footerNote1: "* Mon-Fri 09:00 ~ 18:00 KST (Closed Weekends/Holidays)",
+      footerNote2: "* International export & farm consultation available",
       visitBtn: "Visit Website"
     },
     footer: {
       company: "Agrokorea Co., Ltd. | Advisor Dr. James Hong",
       address: "Room 1506, Seongji Bldg, 75 Keunuemul-ro, Mapo-gu, Seoul, Republic of Korea",
-      tel: "TEL: 02-6949-5708 | Mobile: 010-5407-5708",
+      tel: "TEL: +82-2-6949-5708 | Mobile: +82-10-5407-5708",
       web: "Website:",
       manufacturer: "Manufacturer:",
       manufacturerVal: "VETALIS Laboratoire (France, Factory Approval No. α FR 16089043)",
@@ -524,6 +536,10 @@ export const translations = {
     }
   },
   fr: {
+    meta: {
+      title: "VETACOL | Supplément Immunitaire au Colostrum pour Veaux",
+      desc: "L'Heure d'Or du Veau ! Formule complexe 5-en-1 (Colostrum, Lactosérum, Probiotiques Bacillus, MCT, Vitamines) par VETALIS France & Agrokorea. Seringue orale de 15 ml."
+    },
     banner: "🇫🇷 Importé directement de VETALIS France | Solution clinique Agrokorea Co., Ltd. × Dr. James Hong",
     goldenTimer: {
       badge: "🚨 Heure d'Or de Survie du Veau",
@@ -711,17 +727,19 @@ export const translations = {
       qrBadge: "📱 Scan facile sur smartphone",
       qrTitle: "QR de la page de destination officielle Vetacol",
       qrDesc: "Disponible pour affiches, dépliants et cartes de visite ! Scannez avec l'appareil photo du smartphone pour vous connecter.",
-      phone1: "📞 Service client :",
-      phone2: "📱 Support mobile :",
+      phone1: "📞 Service international :",
+      phone2: "📱 Mobile / WhatsApp :",
+      phone1Val: "+82-2-6949-5708",
+      phone2Val: "+82-10-5407-5708",
       web: "🌐 Site officiel : www.agrokorea.kr",
-      footerNote1: "* En semaine 09:00 ~ 18:00 (Fermé les week-ends/jours fériés)",
-      footerNote2: "* Consultation sur mesure dans toute la ferme",
+      footerNote1: "* En semaine 09:00 ~ 18:00 KST (Fermé les week-ends/jours fériés)",
+      footerNote2: "* Consultation internationale & export disponible",
       visitBtn: "Visiter le site web"
     },
     footer: {
       company: "Agrokorea Co., Ltd. | Conseiller Dr. James Hong",
       address: "Bureau 1506, Bâtiment Seongji, 75 Keunuemul-ro, Mapo-gu, Séoul, République de Corée",
-      tel: "TÉL : 02-6949-5708 | Mobile : 010-5407-5708",
+      tel: "TÉL : +82-2-6949-5708 | Mobile : +82-10-5407-5708",
       web: "Site web :",
       manufacturer: "Fabricant :",
       manufacturerVal: "VETALIS Laboratoire (France, N° d'agrément d'usine α FR 16089043)",
