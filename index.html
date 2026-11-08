@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
@@ -31,7 +31,78 @@
 
     <!-- 모바일 브라우저 상단 테마 컬러 (딥 포레스트 그린) -->
     <meta name="theme-color" content="#00513b" />
-  </head>
+    <link rel="canonical" href="https://vetacol.kr/" />
+
+    <!-- Structured Data (JSON-LD) E-E-A-T Graph -->
+    <script id="geo-dynamic-schema" type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Product",
+          "@id": "https://vetacol.kr/#product",
+          "name": "베타콜 (Vetacol) 신생 송아지 초유 면역 영양제",
+          "image": "https://vetacol.kr/og_image.png",
+          "description": "출생 직후 신생 송아지 생존 골든타임 15ml 경구 시린지! 초유 면역글로불린(IgG)·유청단백·바실러스 생균·MCT 중쇄지방산·비타민 5대 복합 포뮬러.",
+          "brand": {
+            "@type": "Brand",
+            "name": "Vetacol (베타콜)"
+          },
+          "manufacturer": {
+            "@type": "Organization",
+            "@id": "https://www.agrokorea.net/#organization",
+            "name": "(주)한국아그로",
+            "url": "https://www.agrokorea.net/"
+          },
+          "offers": {
+            "@type": "Offer",
+            "url": "https://vetacol.kr/",
+            "priceCurrency": "KRW",
+            "availability": "https://schema.org/InStock"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://vetacol.kr/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "베타콜(Vetacol)은 언제, 어떻게 급여하나요?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "송아지 출생 직후 골든타임(분만 후 6시간 이내)에 15ml 경구 시린지 1개를 입안에 직접 짜서 급여하며, 허약 송아지나 환절기 설사 위험 시 추가 급여합니다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "로타갈 백신과 베타콜을 함께 사용하면 어떤 시너지가 있나요?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "임신우 분만 전 로타갈(Rotagal) 원샷 백신 접종으로 초유 내 특이 항체 역가를 높이고, 송아지 출생 직후 베타콜(Vetacol) 15ml 시린지로 즉각적인 IgG 면역글로불린과 MCT 에너지를 공급하면 신생 송아지 설사 및 폐사율을 입체적으로 방어할 수 있습니다."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <script id="geo-weekly-ld" type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "신생 송아지 초유 면역글로불린 시린지 골든타임 관리 요령은?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "출생 후 6시간 이내에 초유 면역글로불린(IgG), 유청단백, MCT 에너지, 바실러스 생균이 함유된 15ml 시린지를 경구 급여하여 수동면역과 기립 에너지를 동시에 확보합니다."
+      }
+    }
+  ]
+}
+</script>
+</head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
