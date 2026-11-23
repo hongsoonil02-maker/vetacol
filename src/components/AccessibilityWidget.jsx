@@ -11,7 +11,6 @@ import React, { useState, useEffect, useCallback } from "react";
  * - localStorage 설정 유지
  */
 
-const FONT_LEVELS = ["base", "lg", "xl"];
 const STORAGE_KEY = "vetacol_a11y";
 
 const loadPrefs = () => {
